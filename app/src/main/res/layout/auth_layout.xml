@@ -3,7 +3,16 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
+    <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mot de passe"
+            android:layout_centerInParent="true"
+            android:inputType="textPassword"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:ems="10"/>
     <TextView android:layout_width="wrap_content"
               android:text="ModernBlih"
               android:textSize="50dp"
@@ -12,6 +21,7 @@
               android:layout_centerHorizontal="true"
               android:layout_marginBottom="42dp"/>
     <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -19,20 +29,12 @@
             android:layout_above="@id/password"
             android:ems="10"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:id="@+id/email"/>
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Mot de passe"
-            android:layout_centerInParent="true"
-            android:inputType="textPassword"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:ems="10"
-            android:id="@+id/password"/>
-    <Button android:layout_width="wrap_content"
-            android:text="Valider"
+            android:layout_marginRight="50dp"/>
+
+    <Button
+            android:id="@+id/valid"
+            android:layout_width="wrap_content"
+            android:text="Login"
             android:layout_height="wrap_content"
             android:layout_below="@+id/password"
             android:layout_centerHorizontal="true"

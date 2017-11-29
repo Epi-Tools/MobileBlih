@@ -8,11 +8,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MyRecyclerView extends RecyclerView.Adapter<MyRecyclerView.DataObjectHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.DataObjectHolder> {
 
     private static String LOG_TAG = "MyRecyclerViewAdapter";
     private ArrayList<Project> mDataset;
     private static MyClickListener myClickListener;
+    private MyRecyclerViewAdapter view;
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView label;
@@ -34,7 +35,7 @@ public class MyRecyclerView extends RecyclerView.Adapter<MyRecyclerView.DataObje
         this.myClickListener = myClickListener;
     }
 
-    public MyRecyclerView(ArrayList<Project> myDataset) {
+    public MyRecyclerViewAdapter(ArrayList<Project> myDataset) {
         mDataset = myDataset;
     }
 
