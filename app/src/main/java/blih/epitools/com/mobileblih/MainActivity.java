@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-            }
+        }
         });
 
         //Toolbar
@@ -72,6 +73,21 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("WUT", " Clicked on Item " + position);
                 Intent intent = new Intent(MainActivity.this, AclActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        android.widget.SearchView search = (android.widget.SearchView) findViewById(R.id.searchView);
+        search.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s != "")
+                    adapter.refreshList(getCurrentList(s));
+                return false;
             }
         });
     }
@@ -99,5 +115,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    private ArrayList<Project> getCurrentList(String s)
+    {
+        ArrayList currentList = new ArrayList();
+        for (int i = 0; i < list.size(); i++)
+        {
+            if (list.get(i).getName().toLowerCase().contains(s.toLowerCase()))
+                currentList.add(list.get(i));
+        }
+        return currentList;
+    }
 }

@@ -12,7 +12,9 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay"
-            android:id="@+id/appBarLayout">
+            android:id="@+id/appBarLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,10 +22,14 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:showAsAction="ifRoom"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-
-
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:iconifiedByDefault="false"
+                android:queryHint="Search" />
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
