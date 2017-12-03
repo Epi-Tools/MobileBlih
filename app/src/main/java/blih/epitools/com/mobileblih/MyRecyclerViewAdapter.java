@@ -62,9 +62,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         notifyItemRemoved(index);
     }
 
-    public String ItemAt(int index)
+    public Project getItemAt(int index)
     {
-        return mDataset.get(index).getName();
+        return mDataset.get(index);
     }
 
     public void refreshList(ArrayList<Project> data)

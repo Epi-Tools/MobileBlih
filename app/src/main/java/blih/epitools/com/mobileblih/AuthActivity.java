@@ -1,5 +1,6 @@
 package blih.epitools.com.mobileblih;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,8 +39,10 @@ public class AuthActivity extends AppCompatActivity {
 
     private void connectToBlih()
     {
-        Snackbar.make(findViewById(R.id.auth_view), emailAddress.getText(), Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
+        Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+        intent.putExtra("TOKEN", "");
+        intent.putExtra("PROJECT_LIST", "");
+        startActivity(intent);
     }
 
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/acl_creator_view"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/username_acl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="Username"
+        android:ems="10"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"/>
+    <EditText
+        android:id="@+id/acl_given"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="rw"
+        android:ems="10"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"/>
+</LinearLayout>
