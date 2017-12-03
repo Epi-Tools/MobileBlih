@@ -80,6 +80,8 @@ public class AuthActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e("Error: ", error.getMessage());
+                Snackbar.make(findViewById(R.id.auth_view), "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
         req.setShouldCache(false);
