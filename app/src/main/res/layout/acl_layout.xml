@@ -42,5 +42,12 @@
             android:layout_marginBottom="20dp"
             android:layout_marginRight="20dp"
             android:id="@+id/fab_acl"/>
-
+<Button android:id="@+id/delete_repo"
+        android:layout_width="wrap_content"
+        android:background="@drawable/button_green"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="delete"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/fab_acl"/>
 </RelativeLayout>

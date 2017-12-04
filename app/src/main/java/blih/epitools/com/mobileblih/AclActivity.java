@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -53,6 +54,36 @@ public class AclActivity extends AppCompatActivity {
                 createACL();
             }
         });
+        Button delete = (Button) findViewById(R.id.delete_repo);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteRepo();
+            }
+        });
+    }
+
+    private void deleteRepo() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("Delete")
+                .setMessage("Do you really want to delete " + currentProjet.getName())
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        sendDeleteRequest();
+                        Snackbar.make(findViewById(R.id.acl_view),  currentProjet.getName() + " has been deleted.", Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
+    }
+
+    private void sendDeleteRequest() {
+
     }
 
     private void createACL() {
@@ -60,8 +91,6 @@ public class AclActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
 
         View dialogView = inflater.inflate(R.layout.acl_creator, null);
-
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add ACL").setView(dialogView);

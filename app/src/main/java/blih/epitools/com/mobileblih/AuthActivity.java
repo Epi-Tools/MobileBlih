@@ -30,6 +30,7 @@ public class AuthActivity extends AppCompatActivity {
     String token = null;
     String list = null;
     Gson gson;
+    Button valid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,13 @@ public class AuthActivity extends AppCompatActivity {
                             Log.e("List", response.getJSONObject("body").getJSONObject("repositories").toString());
 
                             list = response.getJSONObject("body").getJSONObject("repositories").toString();
-
                             connectToBlih();
 
                         } catch (JSONException e) {
                             try {
                                 Snackbar.make(findViewById(R.id.auth_view), response.get("error").toString(), Snackbar.LENGTH_SHORT)
                                         .setAction("Action", null).show();
+                                valid.setEnabled(true);
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             }
@@ -82,6 +83,7 @@ public class AuthActivity extends AppCompatActivity {
                 VolleyLog.e("Error: ", error.getMessage());
                 Snackbar.make(findViewById(R.id.auth_view), "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                valid.setEnabled(true);
             }
         });
         req.setShouldCache(false);
@@ -95,10 +97,11 @@ public class AuthActivity extends AppCompatActivity {
         pwd = (EditText) findViewById(R.id.password);
         gson = new Gson();
 
-        Button valid = (Button) findViewById(R.id.valid);
+        valid = (Button) findViewById(R.id.valid);
         valid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                valid.setEnabled(false);
                 HandleRequest();
             }
         });
@@ -109,6 +112,7 @@ public class AuthActivity extends AppCompatActivity {
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
         intent.putExtra("TOKEN", token);
         intent.putExtra("PROJECT_LIST", list);
+        valid.setEnabled(true);
         startActivity(intent);
     }
 
