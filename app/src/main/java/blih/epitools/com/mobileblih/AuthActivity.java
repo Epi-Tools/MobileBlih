@@ -41,10 +41,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private void HandleRequest()
     {
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        String serverUrl = getResources().getString(R.string.server_url) + "/api/auth";
+        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.auth);
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("email", email.getText().toString());
@@ -87,8 +84,7 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
         req.setShouldCache(false);
-        queue.add(req);
-
+        RequestHandler.getInstance(this).addToRequestQueue(req);
     }
 
     private void setupEvents()
@@ -112,6 +108,7 @@ public class AuthActivity extends AppCompatActivity {
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
         intent.putExtra("TOKEN", token);
         intent.putExtra("PROJECT_LIST", list);
+        intent.putExtra("EMAIL", email.getText().toString());
         valid.setEnabled(true);
         startActivity(intent);
     }
