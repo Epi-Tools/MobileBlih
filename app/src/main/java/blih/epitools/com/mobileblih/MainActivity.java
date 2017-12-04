@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        reloadRepoList();
     }
 
     public void setupEvents() {
@@ -136,10 +136,12 @@ public class MainActivity extends AppCompatActivity {
                             String repoList = response.getJSONObject("body").getJSONObject("repositories").toString();
                             parseProjectsList(repoList);
                             adapter.refreshList(list);
+                            mSwipeRefreshLayout.setRefreshing(false);
                         } catch (JSONException e) {
                             try {
-                                Snackbar.make(findViewById(R.id.auth_view), response.get("error").toString(), Snackbar.LENGTH_SHORT)
+                                Snackbar.make(findViewById(R.id.main_view), response.get("error").toString(), Snackbar.LENGTH_SHORT)
                                         .setAction("Action", null).show();
+                                mSwipeRefreshLayout.setRefreshing(false);
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             }
@@ -149,13 +151,52 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e("Error: ", error.getMessage());
+                Snackbar.make(findViewById(R.id.main_view), "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
         req.setShouldCache(false);
         RequestHandler.getInstance(this).addToRequestQueue(req);
-
-        mSwipeRefreshLayout.setRefreshing(false);
     }
+
+
+    private void SendProjectToServer(final String projectName) throws JSONException {
+        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.create);
+
+        JSONObject obj = new JSONObject();
+
+        obj.put("email", email);
+        obj.put("token", token);
+        obj.put("name", projectName);
+        obj.put("acl", true);
+
+        Log.e("Datas", serverUrl);
+
+        Log.e("acl", obj.toString());
+
+        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("Response: ", response.toString());
+                        Snackbar.make(findViewById(R.id.main_view),
+                                projectName + " has been created.", Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+                Snackbar.make(findViewById(R.id.main_view), "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        req.setShouldCache(false);
+        RequestHandler.getInstance(this).addToRequestQueue(req);
+    }
+
 
     private void createProject() {
         final EditText repository = new EditText(this);
@@ -166,13 +207,20 @@ public class MainActivity extends AppCompatActivity {
                 .setView(repository)
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String url = repository.getText().toString();
-                        Snackbar.make(findViewById(R.id.main_view), repository.getText() + " has been created.", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                        if (!Objects.equals(repository.getText().toString(), ""))
+                        {
+                            String repoName = repository.getText().toString();
+                            try {
+                                SendProjectToServer(repoName);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+
                     }
                 })
                 .show();
@@ -229,8 +277,6 @@ public class MainActivity extends AppCompatActivity {
             token = value;
             value = extras.getString("EMAIL");
             email = value;
-            Log.e("Datas", email);
-
         }
     }
 

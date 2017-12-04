@@ -71,6 +71,9 @@ public class AuthActivity extends AppCompatActivity {
                                 valid.setEnabled(true);
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
+                                Snackbar.make(findViewById(R.id.auth_view), "Bad Token", Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
+                                valid.setEnabled(true);
                             }
                         }
                     }
