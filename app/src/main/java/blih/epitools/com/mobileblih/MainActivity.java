@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, AclActivity.class);
                 intent.putExtra("PROJECT", gson.toJson(adapter.getItemAt(position)));
+                intent.putExtra("TOKEN", token);
+                intent.putExtra("EMAIL", email);
                 startActivity(intent);
             }
         });
@@ -180,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.e("Response: ", response.toString());
+                        reloadRepoList();
                         Snackbar.make(findViewById(R.id.main_view),
                                 projectName + " has been created.", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();

@@ -17,13 +17,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 public class AclActivity extends AppCompatActivity {
 
     Project currentProjet;
+    String email;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,8 @@ public class AclActivity extends AppCompatActivity {
         if (extras != null) {
             String value = extras.getString("PROJECT");
             currentProjet = gson.fromJson(value, Project.class);
+            email = extras.getString("EMAIL");
+            token = extras.getString("TOKEN");
         }
     }
 
@@ -70,7 +80,11 @@ public class AclActivity extends AppCompatActivity {
                 .setMessage("Do you really want to delete " + currentProjet.getName())
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        sendDeleteRequest();
+                        try {
+                            sendDeleteRequest();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         Snackbar.make(findViewById(R.id.acl_view),  currentProjet.getName() + " has been deleted.", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
@@ -82,8 +96,52 @@ public class AclActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void sendDeleteRequest() {
+    private void sendDeleteRequest() throws JSONException {
+        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.delete);
 
+        JSONObject obj = new JSONObject();
+
+        obj.put("email", email);
+        obj.put("token", token);
+        obj.put("name", currentProjet.getName());
+        obj.put("acl", true);
+
+        Log.e("Datas", serverUrl);
+
+        Log.e("acl", obj.toString());
+
+        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("Response: ", response.toString());
+                        try {
+                            Snackbar.make(findViewById(R.id.acl_view),
+                                    response.getJSONObject("body").get("message").toString(), Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            try {
+                                Snackbar.make(findViewById(R.id.acl_view),
+                                        response.get("err").toString(), Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+                Snackbar.make(findViewById(R.id.acl_view), "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        req.setShouldCache(false);
+        RequestHandler.getInstance(this).addToRequestQueue(req);
     }
 
     private void createACL() {
