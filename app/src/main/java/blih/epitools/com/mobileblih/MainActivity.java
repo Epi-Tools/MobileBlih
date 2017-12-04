@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void reloadRepoList()
+    public void reloadRepoList()
     {
         String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.repo_list);
 
@@ -218,6 +218,10 @@ public class MainActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }
+                        else {
+                            Snackbar.make(findViewById(R.id.main_view), "The repository has not been created.", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
                         }
                     }
                 })

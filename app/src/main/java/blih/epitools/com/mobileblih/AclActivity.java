@@ -85,8 +85,6 @@ public class AclActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Snackbar.make(findViewById(R.id.acl_view),  currentProjet.getName() + " has been deleted.", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -119,6 +117,7 @@ public class AclActivity extends AppCompatActivity {
                             Snackbar.make(findViewById(R.id.acl_view),
                                     response.getJSONObject("body").get("message").toString(), Snackbar.LENGTH_SHORT)
                                     .setAction("Action", null).show();
+                            finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             try {
