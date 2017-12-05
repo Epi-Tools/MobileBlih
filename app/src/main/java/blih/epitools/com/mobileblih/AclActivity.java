@@ -46,6 +46,12 @@ public class AclActivity extends AppCompatActivity {
         getDatasFromMain();
 
         setContentView(R.layout.acl_layout);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         setupEvents();
     }
 
@@ -90,7 +96,7 @@ public class AclActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
             @Override
             public void onItemClick(final int position, View v) {
-               // editAcl(position);
+               editAcl(position);
             }
         });
         recyclerView.setAdapter(adapter);

@@ -45,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getDatas();
-        setupEvents();
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
+        setupEvents();
     }
 
     public void setupEvents() {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                             try {
                                 Snackbar.make(findViewById(R.id.main_view),
-                                        response.get("error").toString(), Snackbar.LENGTH_SHORT)
+                                        response.get("err").toString(), Snackbar.LENGTH_SHORT)
                                         .setAction("Action", null).show();
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
