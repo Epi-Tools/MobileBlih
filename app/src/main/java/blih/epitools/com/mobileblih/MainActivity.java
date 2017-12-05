@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onResume();
         setupEvents();
+        reloadRepoList();
     }
 
     public void setupEvents() {
