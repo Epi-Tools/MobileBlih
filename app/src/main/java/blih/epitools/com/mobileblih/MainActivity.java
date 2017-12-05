@@ -183,9 +183,20 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.e("Response: ", response.toString());
                         reloadRepoList();
-                        Snackbar.make(findViewById(R.id.main_view),
-                                projectName + " has been created.", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                        try {
+                            Snackbar.make(findViewById(R.id.main_view),
+                                    response.getJSONObject("_body").get("message").toString(), Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            try {
+                                Snackbar.make(findViewById(R.id.main_view),
+                                        response.get("error").toString(), Snackbar.LENGTH_SHORT)
+                                        .setAction("Action", null).show();
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
                     }
 
                 }, new Response.ErrorListener() {

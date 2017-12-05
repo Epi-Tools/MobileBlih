@@ -14,13 +14,10 @@
         android:ems="10"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"/>
-    <EditText
-        android:id="@+id/acl_given"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:hint="rw"
-        android:ems="10"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"/>
+    <Spinner
+            android:id="@+id/spinner_acl_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"/>
 </LinearLayout>

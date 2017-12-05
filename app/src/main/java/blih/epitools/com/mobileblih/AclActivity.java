@@ -1,21 +1,19 @@
 package blih.epitools.com.mobileblih;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,7 +24,6 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,6 +37,7 @@ public class AclActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Project> list;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +59,7 @@ public class AclActivity extends AppCompatActivity {
             email = extras.getString("EMAIL");
             token = extras.getString("TOKEN");
         }
+        list = new ArrayList<>();
     }
 
     public void setupEvents() {
@@ -86,7 +85,15 @@ public class AclActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
+        adapter = new ListViewAdapter(list);
 
+        adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
+            @Override
+            public void onItemClick(final int position, View v) {
+                editAcl(position);
+            }
+        });
+        recyclerView.setAdapter(adapter);
         try {
             setupAclList();
         } catch (JSONException e) {
@@ -175,12 +182,18 @@ public class AclActivity extends AppCompatActivity {
         builder.setTitle("Add ACL").setView(dialogView);
 
         final EditText username = (EditText) dialogView.findViewById(R.id.username_acl);
-        final EditText acl = (EditText) dialogView.findViewById(R.id.acl_given);
+
+        spinner = (Spinner) dialogView.findViewById(R.id.spinner_acl_create);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.acls_creator, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Snackbar.make(findViewById(R.id.acl_view),
-                                username.getText() + " has been given " + acl.getText() + " acl.", Snackbar.LENGTH_SHORT)
+                                username.getText() + " has been given " + " acl.", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
                 })
@@ -213,18 +226,16 @@ public class AclActivity extends AppCompatActivity {
                         try {
                             Log.e("Response: ", response.get("body").toString());
                             parseProjectsList(response.getJSONObject("body"));
-                            adapter = new ListViewAdapter(list);
-
-                            adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
-                                @Override
-                                public void onItemClick(int position, View v) {
-                                    Gson gson = new Gson();
-
-                                }
-                            });
-                            recyclerView.setAdapter(adapter);
+                            adapter.refreshList(list);
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            try {
+                                Snackbar.make(findViewById(R.id.acl_view),
+                                        response.get("err").toString(), Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
                         }
                     }
 
@@ -258,10 +269,49 @@ public class AclActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
-        for (int i = 0; i < list.size(); i++)
-        {
-            Log.e("List acl", list.get(i).getAcl());
-        }
     }
+
+    private void editAcl(int pos)
+    {
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.edit_layout, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit ACL").setView(dialogView);
+
+        if (list.size() != 0)
+        {
+            final TextView username = (TextView) dialogView.findViewById(R.id.username_acl);
+
+            username.setText(list.get(pos).getName());
+
+            spinner = (Spinner) dialogView.findViewById(R.id.spinner_acl_edit);
+
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                    R.array.acls_editor, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Snackbar.make(findViewById(R.id.acl_view),
+                        "test", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+        })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 }

@@ -7,4 +7,13 @@
     <string name="create">/api/repo/create</string>
     <string name="delete">/api/repo/delete</string>
     <string name="repo_list">/api/repo/list</string>
+    <string-array name="acls_editor">
+        <item>r</item>
+        <item>rw</item>
+        <item>None</item>
+    </string-array>
+    <string-array name="acls_creator">
+        <item>r</item>
+        <item>rw</item>
+    </string-array>
 </resources>
