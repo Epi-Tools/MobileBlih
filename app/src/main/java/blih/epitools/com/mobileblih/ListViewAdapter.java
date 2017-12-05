@@ -5,22 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.DataObjectHolder> {
+public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.DataObjectHolder> {
 
-    private static String LOG_TAG = "ProjectViewAdapter";
+    private static String LOG_TAG = "ListViewAdapter";
     private ArrayList<Project> mDataset;
     private static MyClickListener myClickListener;
-    private ProjectViewAdapter view;
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView label;
+        TextView acl;
+
 
         public DataObjectHolder(View itemView) {
             super(itemView);
             label = (TextView) itemView.findViewById(R.id.projectName);
+            acl = (TextView) itemView.findViewById(R.id.project_acl);
             Log.i(LOG_TAG, "Adding Listener");
             itemView.setOnClickListener(this);
         }
@@ -35,7 +38,7 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
         this.myClickListener = myClickListener;
     }
 
-    public ProjectViewAdapter(ArrayList<Project> myDataset) {
+    public ListViewAdapter(ArrayList<Project> myDataset) {
         mDataset = myDataset;
     }
 
@@ -50,6 +53,10 @@ public class ProjectViewAdapter extends RecyclerView.Adapter<ProjectViewAdapter.
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.label.setText(mDataset.get(position).getName());
+        if (mDataset.get(position).getAcl() != null)
+        {
+            holder.acl.setText(mDataset.get(position).getAcl());
+        }
     }
 
     public void addItem(Project dataObj, int index) {

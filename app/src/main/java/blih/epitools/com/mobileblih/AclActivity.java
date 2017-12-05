@@ -23,15 +23,23 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class AclActivity extends AppCompatActivity {
 
-    Project currentProjet;
-    String email;
-    String token;
+    private Project currentProjet;
+    private String email;
+    private String token;
+    private ListViewAdapter adapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Project> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,7 @@ public class AclActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String value = extras.getString("PROJECT");
+            Log.e("Response: ", value);
             currentProjet = gson.fromJson(value, Project.class);
             email = extras.getString("EMAIL");
             token = extras.getString("TOKEN");
@@ -71,6 +80,19 @@ public class AclActivity extends AppCompatActivity {
                 deleteRepo();
             }
         });
+
+        //RecyclerView
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        try {
+            setupAclList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void deleteRepo() {
@@ -157,7 +179,8 @@ public class AclActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Snackbar.make(findViewById(R.id.acl_view), username.getText() + " has been given " + acl.getText() + " acl.", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(findViewById(R.id.acl_view),
+                                username.getText() + " has been given " + acl.getText() + " acl.", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
                 })
@@ -167,5 +190,78 @@ public class AclActivity extends AppCompatActivity {
                 })
                 .show();
 
+    }
+
+    private void setupAclList() throws JSONException {
+        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.acl_list);
+
+        JSONObject obj = new JSONObject();
+
+        obj.put("email", email);
+        obj.put("token", token);
+        obj.put("name", currentProjet.getName());
+
+        Log.e("Datas", serverUrl);
+
+        Log.e("acl", obj.toString());
+
+        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("Response: ", response.toString());
+                        try {
+                            Log.e("Response: ", response.get("body").toString());
+                            parseProjectsList(response.getJSONObject("body"));
+                            adapter = new ListViewAdapter(list);
+
+                            adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
+                                @Override
+                                public void onItemClick(int position, View v) {
+                                    Gson gson = new Gson();
+
+                                }
+                            });
+                            recyclerView.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+                Snackbar.make(findViewById(R.id.acl_view),
+                        "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        req.setShouldCache(false);
+        RequestHandler.getInstance(this).addToRequestQueue(req);
+    }
+
+    private void parseProjectsList(JSONObject obj)
+    {
+        list = new ArrayList<>();
+            Iterator<String> keys = obj.keys();
+            JSONArray array = obj.names();
+            Log.e("List acl", array.toString());
+
+            for (int i = 0; i < array.length(); i++)
+            {
+                try {
+                    String key = array.get(i).toString();
+                    Project aclList = new Project(key, obj.get(key).toString());
+                    list.add(aclList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            Log.e("List acl", list.get(i).getAcl());
+        }
     }
 }

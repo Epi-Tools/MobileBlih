@@ -33,7 +33,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Project> list;
-    private ProjectViewAdapter adapter;
+    private ListViewAdapter adapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -73,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        adapter = new ProjectViewAdapter(list);
+        adapter = new ListViewAdapter(list);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new ProjectViewAdapter.MyClickListener() {
+        adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 Gson gson = new Gson();
