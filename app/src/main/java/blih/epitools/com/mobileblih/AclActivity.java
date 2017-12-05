@@ -90,7 +90,7 @@ public class AclActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
             @Override
             public void onItemClick(final int position, View v) {
-                editAcl(position);
+               // editAcl(position);
             }
         });
         recyclerView.setAdapter(adapter);
