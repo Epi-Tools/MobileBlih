@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class AclActivity extends AppCompatActivity {
 
@@ -189,6 +190,8 @@ public class AclActivity extends AppCompatActivity {
 
         final EditText username = (EditText) dialogView.findViewById(R.id.username_acl);
 
+        final String[] aclSelected = {"r"};
+
         spinner = (Spinner) dialogView.findViewById(R.id.spinner_acl_create);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -196,11 +199,26 @@ public class AclActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                aclSelected[0] = parent.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Snackbar.make(findViewById(R.id.acl_view),
-                                username.getText() + " has been given " + " acl.", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                        if (!Objects.equals(username.getText().toString(), ""))
+                            updateAcl(username.getText().toString(), aclSelected[0]);
+                        else
+                            Snackbar.make(findViewById(R.id.acl_view),
+                                    "Please enter the username.", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
