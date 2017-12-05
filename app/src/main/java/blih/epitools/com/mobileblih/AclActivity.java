@@ -290,6 +290,8 @@ public class AclActivity extends AppCompatActivity {
         {
             final TextView username = (TextView) dialogView.findViewById(R.id.username_acl);
 
+            final String[] aclSelected = {"r"};
+
             username.setText(list.get(pos).getName());
 
             spinner = (Spinner) dialogView.findViewById(R.id.spinner_acl_edit);
@@ -299,11 +301,24 @@ public class AclActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
 
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    aclSelected[0] = parent.getSelectedItem().toString();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                Snackbar.make(findViewById(R.id.acl_view),
-                        "test", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                if (aclSelected[0].equals("None"))
+                    aclSelected[0] = "";
+                updateAcl(username.getText().toString(), aclSelected[0]);
+
             }
         })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -318,6 +333,68 @@ public class AclActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    private void updateAcl(String user, String acl) {
+        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.update_acl);
+
+        JSONObject obj = new JSONObject();
+
+        try {
+            obj.put("email", email);
+            obj.put("token", token);
+            obj.put("name", user);
+            obj.put("repoName", currentProjet.getName());
+            obj.put("acl", acl);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("Datas", serverUrl);
+
+        Log.e("acl", obj.toString());
+
+        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("Response: ", response.toString());
+                        try {
+                            Log.e("Response: ", response.get("body").toString());
+                            Snackbar.make(findViewById(R.id.acl_view),
+                                    response.getJSONObject("body").get("message").toString(), Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show();
+                            setupAclList();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            try {
+                                Snackbar.make(findViewById(R.id.acl_view),
+                                        response.get("error").toString(), Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                                try {
+                                    Snackbar.make(findViewById(R.id.acl_view),
+                                            response.get("err").toString(), Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
+                                } catch (JSONException e2) {
+                                    e2.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+                Snackbar.make(findViewById(R.id.acl_view),
+                        "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        req.setShouldCache(false);
+        RequestHandler.getInstance(this).addToRequestQueue(req);
     }
 
 }
