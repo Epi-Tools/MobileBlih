@@ -37,6 +37,8 @@
             android:id="@+id/valid"
             android:layout_width="wrap_content"
             android:text="Login"
+            android:background="@drawable/feedback_button"
+            android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:layout_below="@+id/password"
             android:layout_centerHorizontal="true"
