@@ -5,9 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+
+import blih.epitools.com.mobileblih.POJO.Project;
 
 public class ListViewAdapter extends RecyclerView.Adapter<ListViewAdapter.DataObjectHolder> {
 
