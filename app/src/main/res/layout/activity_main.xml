@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_view"
-    tools:context="blih.epitools.com.mobileblih.MainActivity">
+    tools:context="blih.epitools.com.mobileblih.Activities.MainActivity">
 
 
     <android.support.design.widget.AppBarLayout
@@ -58,6 +58,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="20dp"
+            android:onClick="createProject"
             android:layout_marginRight="20dp"
             android:id="@+id/fab"/>
 </RelativeLayout>
