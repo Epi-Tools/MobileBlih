@@ -10,8 +10,10 @@ import android.widget.EditText;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
 import blih.epitools.com.mobileblih.CallBacks.AuthCallBack;
-import blih.epitools.com.mobileblih.POJO.Token;
+import blih.epitools.com.mobileblih.POJO.UserCredits;
+import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.R;
+import blih.epitools.com.mobileblih.POJO.User;
 import retrofit2.Call;
 
 
@@ -19,6 +21,7 @@ public class AuthActivity extends AppCompatActivity {
 
     Button valid;
     EditText email;
+    //TODO add Github button to login
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +32,22 @@ public class AuthActivity extends AppCompatActivity {
 
     public void AuthBlihAPI(View view)
     {
-        BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
-
-        EditText email = (EditText) findViewById(blih.epitools.com.mobileblih.R.id.email);
+        email = (EditText) findViewById(blih.epitools.com.mobileblih.R.id.email);
         EditText pwd = (EditText) findViewById(blih.epitools.com.mobileblih.R.id.password);
+
+        BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
         // TODO error text handler on UI
         // TODO add alert loading on overlay
-        Call<Token> call = service.authUser(email.getText().toString(), pwd.getText().toString());
-        valid.setEnabled(false);
+
+        final Call<UserToken> call = service.authUser(new UserCredits(email.getText().toString(), pwd.getText().toString()));
         call.enqueue(new AuthCallBack(this));
     }
 
     public void loadMainActivity(String token)
     {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("TOKEN", token);
-        intent.putExtra("EMAIL", email.getText().toString());
-        valid.setEnabled(true);
+        User.getInstance().setUserInfos(email.getText().toString(), token);
         startActivity(intent);
     }
 

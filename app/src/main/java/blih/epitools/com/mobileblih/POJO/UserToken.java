@@ -1,6 +1,6 @@
 package blih.epitools.com.mobileblih.POJO;
 
-public class Token {
+public class UserToken {
     private String token;
     private ProjectListBody body;
 

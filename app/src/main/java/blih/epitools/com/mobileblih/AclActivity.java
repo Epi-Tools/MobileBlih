@@ -14,16 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
@@ -35,7 +25,6 @@ public class AclActivity extends AppCompatActivity {
     private Project currentProjet;
     private String email;
     private String token;
-    private ListViewAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Project> list;
@@ -46,18 +35,17 @@ public class AclActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        getDatasFromMain();
-
         setContentView(R.layout.acl_layout);
+    //    getDatasFromMain();
+
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        setupEvents();
     }
-
+/*
     private void getDatasFromMain() {
         Gson gson = new Gson();
         Bundle extras = getIntent().getExtras();
@@ -416,5 +404,5 @@ public class AclActivity extends AppCompatActivity {
         req.setShouldCache(false);
         RequestHandler.getInstance(this).addToRequestQueue(req);
     }
-
+*/
 }

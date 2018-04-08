@@ -1,10 +1,8 @@
 package blih.epitools.com.mobileblih.Activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,20 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
-import blih.epitools.com.mobileblih.AclActivity;
 import blih.epitools.com.mobileblih.CallBacks.CreateRepoCallBack;
 import blih.epitools.com.mobileblih.CallBacks.ProjectsListCallBack;
-import blih.epitools.com.mobileblih.ListViewAdapter;
-import blih.epitools.com.mobileblih.POJO.Token;
+import blih.epitools.com.mobileblih.POJO.UserToken;
+import blih.epitools.com.mobileblih.ProjectsAdapter;
 import blih.epitools.com.mobileblih.R;
+import blih.epitools.com.mobileblih.POJO.User;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> list;
+    private List<String> list;
+    private ProjectsAdapter adapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    String token;
-    String email;
 
     //TODO loading animation when loading projects
 
@@ -43,42 +41,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
-        token = getIntent().getStringExtra("TOKEN");
-        email = getIntent().getStringExtra("EMAIL");
+        setupEvents();
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        setupEvents();
         getRepoList();
     }
 
+    public void getListFromCallBack(List<String> repoList) {
+        list = repoList;
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
+        adapter = new ProjectsAdapter(this, list);
+        recyclerView.setAdapter(adapter);
+    }
+
     public void setupEvents() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //RecyclerView
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        //adapter = new ListViewAdapter(list);
-        recyclerView.setAdapter(adapter);
-
-        adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-
-                Intent intent = new Intent(MainActivity.this, AclActivity.class);
-     //           intent.putExtra("PROJECT", gson.toJson(adapter.getItemAt(position)));
-                intent.putExtra("TOKEN", token);
-                intent.putExtra("EMAIL", email);
-                startActivity(intent);
-            }
-        });
 
         // SearchView
         android.widget.SearchView search = (android.widget.SearchView) findViewById(R.id.searchView);
@@ -91,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s != "")
-                    adapter.refreshList(getCurrentList(s));
+                    adapter.updateList(getCurrentList(s));
                 return false;
             }
         });
@@ -110,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
-        Call<Token> call = service.repoList(email, token);
+        Call<ResponseBody> call = service.repoList(User.getInstance());
         call.enqueue(new ProjectsListCallBack(this));
     }
 
@@ -118,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     private void createRepo(final String projectName) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
-        Call<Token> call = service.createRepo(email, token, projectName, true);
+        Call<UserToken> call = service.createRepo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true);
         call.enqueue(new CreateRepoCallBack(this));
     }
 
