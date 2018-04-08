@@ -10,6 +10,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
-import blih.epitools.com.mobileblih.CallBacks.CreateRepoCallBack;
+import blih.epitools.com.mobileblih.CallBacks.RepoCallBack;
 import blih.epitools.com.mobileblih.CallBacks.ProjectsListCallBack;
+import blih.epitools.com.mobileblih.POJO.Repo;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.ProjectsAdapter;
 import blih.epitools.com.mobileblih.R;
@@ -65,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-
-
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,13 +109,21 @@ public class MainActivity extends AppCompatActivity {
     private void createRepo(final String projectName) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
-        Call<UserToken> call = service.createRepo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true);
-        call.enqueue(new CreateRepoCallBack(this));
+        Call<UserToken> call = service.createRepo(new Repo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true));
+        call.enqueue(new RepoCallBack(this));
+    }
+
+    public void deleteRepo(final String projectName) {
+        BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
+
+        Call<UserToken> call = service.deleteRepo(new Repo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true));
+        call.enqueue(new RepoCallBack(this));
     }
 
 
     public void createProject(View view) {
         final EditText repository = new EditText(this);
+        repository.setInputType(InputType.TYPE_CLASS_TEXT);
         repository.setHint("Repository Name");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Create Repository")
@@ -128,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        // TODO just cancel the action, find something useful
+                            dialog.dismiss();
                     }
                 })
                 .show();

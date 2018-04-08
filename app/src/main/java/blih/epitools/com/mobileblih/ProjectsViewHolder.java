@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 
+import blih.epitools.com.mobileblih.Activities.MainActivity;
+
 class ProjectsViewHolder extends RecyclerView.ViewHolder{
 
     private TextView ProjectName;
@@ -38,7 +40,7 @@ class ProjectsViewHolder extends RecyclerView.ViewHolder{
                         .setMessage("Do you really want to delete " + repoName)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-
+                                ((MainActivity)context).deleteRepo(repoName);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
