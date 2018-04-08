@@ -1,9 +1,11 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import blih.epitools.com.mobileblih.Activities.AclActivity;
 import blih.epitools.com.mobileblih.Activities.MainActivity;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import retrofit2.Call;
@@ -12,26 +14,31 @@ import retrofit2.Response;
 
 public class RepoCallBack implements Callback<UserToken> {
 
-    private MainActivity context;
+    private Context context;
 
     // TODO handle error management
-    public RepoCallBack(MainActivity _context) {
+    public RepoCallBack(Context _context) {
         context = _context;
     }
 
+    // TODO handle Ok on delete repo from aclActivity
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
         if (response.isSuccessful()) {
-            try {
+            if (context.getClass().getName().contains("MainActivity")) {
                 try {
-                    alertMessage(response.body().getBody().getMessage());
+                    try {
+                        alertMessage(response.body().getBody().getMessage());
+                    } catch (NullPointerException ex) {
+                        alertMessage(response.body().get_body().getMessage());
+                    }
                 } catch (NullPointerException ex) {
-                    alertMessage(response.body().get_body().getMessage());
+                    alertMessage(response.body().getErr());
                 }
-            } catch (NullPointerException ex) {
-                alertMessage(response.body().getErr());
-            }
-            context.getRepoList();
+                Log.e("Activity", context.getClass().getName());
+                ((MainActivity) context).getRepoList();
+            } else
+                ((AclActivity) context).finish();
         } else {
             Log.e("Error", response.message());
         }
@@ -40,6 +47,7 @@ public class RepoCallBack implements Callback<UserToken> {
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
         Log.e("failure", t.getStackTrace().toString());
+        alertMessage("Blih is unreacheable. Please check your internet connection and try again.");
     }
 
     private void alertMessage(String message) {

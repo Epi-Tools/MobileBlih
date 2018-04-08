@@ -5,14 +5,14 @@ public class RepoAclUpdate {
     private String token;
     private String name;
     private String repoName;
-    private String acl;
+    private String menu_acl;
 
     public RepoAclUpdate(String email, String token, String name, String repoName, String acl) {
         this.email = email;
         this.token = token;
         this.name = name;
         this.repoName = repoName;
-        this.acl = acl;
+        this.menu_acl = acl;
     }
 
     public String getEmail() {
@@ -48,10 +48,10 @@ public class RepoAclUpdate {
     }
 
     public String getAcl() {
-        return acl;
+        return menu_acl;
     }
 
     public void setAcl(String acl) {
-        this.acl = acl;
+        this.menu_acl = acl;
     }
 }

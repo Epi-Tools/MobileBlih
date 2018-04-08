@@ -1,22 +1,37 @@
 package blih.epitools.com.mobileblih.Activities;
 
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.*;
 
 import java.util.List;
+import java.util.Objects;
 
+import blih.epitools.com.mobileblih.API.BlihAPI;
+import blih.epitools.com.mobileblih.CallBacks.AclListCallBack;
+import blih.epitools.com.mobileblih.CallBacks.RepoCallBack;
+import blih.epitools.com.mobileblih.POJO.Repo;
+import blih.epitools.com.mobileblih.POJO.RepoACL;
+import blih.epitools.com.mobileblih.POJO.RepoAclUpdate;
+import blih.epitools.com.mobileblih.POJO.User;
 import blih.epitools.com.mobileblih.POJO.UserACL;
+import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.R;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 public class AclActivity extends AppCompatActivity {
 
     private String currentProjet;
-    private RecyclerView recyclerView;
     private List<UserACL> list;
     private Spinner spinner;
 
@@ -28,6 +43,12 @@ public class AclActivity extends AppCompatActivity {
         currentProjet = getIntent().getStringExtra("PROJECT");
         getSupportActionBar().setTitle(currentProjet);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getAclList();
     }
 
     @Override
@@ -44,144 +65,63 @@ public class AclActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             onBackPressed();
         } else if (id == R.id.action_delete) {
-
+            alertDeleteRepo();
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-    }
-/*
-    private void getDatasFromMain() {
-        Gson gson = new Gson();
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("PROJECT");
-            Log.e("Response: ", value);
-            currentProjet = gson.fromJson(value, Project.class);
-            email = extras.getString("EMAIL");
-            token = extras.getString("TOKEN");
-        }
-        list = new ArrayList<>();
-    }
-
-    public void setupEvents() {
-        TextView title = (TextView) findViewById(R.id.title_repo);
-        title.setText(currentProjet.getName());
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_acl);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createACL();
-            }
-        });
-        Button delete = (Button) findViewById(R.id.delete_repo);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteRepo();
-            }
-        });
-
-        //RecyclerView
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        adapter = new ListViewAdapter(list);
-
-        adapter.setOnItemClickListener(new ListViewAdapter.MyClickListener() {
-            @Override
-            public void onItemClick(final int position, View v) {
-               editAcl(position);
-            }
-        });
-        recyclerView.setAdapter(adapter);
-        try {
-            setupAclList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void deleteRepo() {
+    private void alertDeleteRepo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
-                .setTitle("Delete")
-                .setMessage("Do you really want to delete " + currentProjet.getName())
+                .setTitle("Delete Repository")
+                .setMessage("Do you really want to delete " + currentProjet)
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        try {
-                            sendDeleteRequest();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        deleteRepo(currentProjet);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
                     }
                 })
                 .show();
     }
 
-    private void sendDeleteRequest() throws JSONException {
-        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.delete);
+    public void deleteRepo(final String projectName) {
+        BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
-        JSONObject obj = new JSONObject();
-
-        obj.put("email", email);
-        obj.put("token", token);
-        obj.put("name", currentProjet.getName());
-        obj.put("menu_acl", true);
-
-        Log.e("Datas", serverUrl);
-
-        Log.e("menu_acl", obj.toString());
-
-        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("Response: ", response.toString());
-                        try {
-                            Snackbar.make(findViewById(R.id.acl_view),
-                                    response.getJSONObject("body").get("message").toString(), Snackbar.LENGTH_SHORT)
-                                    .setAction("Action", null).show();
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            try {
-                                Snackbar.make(findViewById(R.id.acl_view),
-                                        response.get("err").toString(), Snackbar.LENGTH_SHORT)
-                                        .setAction("Action", null).show();
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-                Snackbar.make(findViewById(R.id.acl_view), "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        req.setShouldCache(false);
-        RequestHandler.getInstance(this).addToRequestQueue(req);
+        Call<UserToken> call = service.deleteRepo(new Repo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true));
+        call.enqueue(new RepoCallBack(this));
     }
 
-    private void createACL() {
+    public void getAclList() {
+        BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
+        Call<ResponseBody> call = service.aclList(new RepoACL(User.getInstance().getEmail(), User.getInstance().getToken(), currentProjet));
+        call.enqueue(new AclListCallBack(this));
+    }
+
+    public void updateAcl(String userName, String acl) {
+        BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
+
+        Call<ResponseBody> call = service.updateAcl(new RepoAclUpdate(User.getInstance().getEmail(), User.getInstance().getToken(), userName, currentProjet, acl));
+        call.enqueue(new AclListCallBack(this));
+    }
+
+    public void getAclListFromCallBack(List<UserACL> repoList) {
+        list = repoList;
+      /*  if (adapter == null) {
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
+            adapter = new ProjectsAdapter(this, list);
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.updateList(list);
+        }*/
+    }
+
+    public void setUserAcl(View view) {
         LayoutInflater inflater = this.getLayoutInflater();
 
         View dialogView = inflater.inflate(R.layout.acl_creator, null);
@@ -213,89 +153,22 @@ public class AclActivity extends AppCompatActivity {
         });
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if (!Objects.equals(username.getText().toString(), ""))
-                            updateAcl(username.getText().toString(), aclSelected[0]);
-                        else
-                            Snackbar.make(findViewById(R.id.acl_view),
-                                    "Please enter the username.", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                })
-                .show();
-
-    }
-
-    private void setupAclList() throws JSONException {
-        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.acl_list);
-
-        JSONObject obj = new JSONObject();
-
-        obj.put("email", email);
-        obj.put("token", token);
-        obj.put("name", currentProjet.getName());
-
-        Log.e("Datas", serverUrl);
-
-        Log.e("menu_acl", obj.toString());
-
-        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("Response: ", response.toString());
-                        try {
-                            Log.e("Response: ", response.get("body").toString());
-                            parseProjectsList(response.getJSONObject("body"));
-                            adapter.refreshList(list);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            try {
-                                Snackbar.make(findViewById(R.id.acl_view),
-                                        response.get("err").toString(), Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-                Snackbar.make(findViewById(R.id.acl_view),
-                        "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (!Objects.equals(username.getText().toString(), ""))
+                    updateAcl(username.getText().toString(), aclSelected[0]);
+                else
+                    Snackbar.make(findViewById(R.id.acl_view),
+                            "Please enter the username.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
             }
-        });
-        req.setShouldCache(false);
-        RequestHandler.getInstance(this).addToRequestQueue(req);
-    }
-
-    private void parseProjectsList(JSONObject obj)
-    {
-        list = new ArrayList<>();
-            Iterator<String> keys = obj.keys();
-            JSONArray array = obj.names();
-            Log.e("List menu_acl", array.toString());
-
-            for (int i = 0; i < array.length(); i++)
-            {
-                try {
-                    String key = array.get(i).toString();
-                    Project aclList = new Project(key, obj.get(key).toString());
-                    list.add(aclList);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
             }
+        }).show();
     }
 
+    // TODO refactor with adapter
     private void editAcl(int pos)
     {
         LayoutInflater inflater = this.getLayoutInflater();
@@ -332,88 +205,20 @@ public class AclActivity extends AppCompatActivity {
                 }
             });
 
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                if (aclSelected[0].equals("None"))
-                    aclSelected[0] = "";
-                updateAcl(username.getText().toString(), aclSelected[0]);
-
-            }
-        })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                })
-                .show();
-        }
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    private void updateAcl(String user, String menu_acl) {
-        String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.update_acl);
-
-        JSONObject obj = new JSONObject();
-
-        try {
-            obj.put("email", email);
-            obj.put("token", token);
-            obj.put("name", user);
-            obj.put("repoName", currentProjet.getName());
-            obj.put("menu_acl", menu_acl);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.e("Datas", serverUrl);
-
-        Log.e("menu_acl", obj.toString());
-
-        JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("Response: ", response.toString());
-                        try {
-                            Log.e("Response: ", response.get("body").toString());
-                            Snackbar.make(findViewById(R.id.acl_view),
-                                    response.getJSONObject("body").get("message").toString(), Snackbar.LENGTH_SHORT)
-                                    .setAction("Action", null).show();
-                            setupAclList();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            try {
-                                Snackbar.make(findViewById(R.id.acl_view),
-                                        response.get("error").toString(), Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                                try {
-                                    Snackbar.make(findViewById(R.id.acl_view),
-                                            response.get("err").toString(), Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();
-                                } catch (JSONException e2) {
-                                    e2.printStackTrace();
-                                }
-                            }
+            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    if (aclSelected[0].equals("None"))
+                        aclSelected[0] = "";
+                    updateAcl(username.getText().toString(), aclSelected[0]);
+                }
+            })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
                         }
-                    }
+                    })
+                    .show();
+        }
 
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-                Snackbar.make(findViewById(R.id.acl_view),
-                        "Blih is unreacheable. Please check your internet connection and try again.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        req.setShouldCache(false);
-        RequestHandler.getInstance(this).addToRequestQueue(req);
     }
-*/
+
 }

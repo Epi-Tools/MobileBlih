@@ -16,24 +16,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/title_repo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/appBarLayoutAcl"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:text="Text"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/title_repo"
-        android:layout_marginTop="61dp"
         android:scrollbars="vertical" />
 
     <android.support.design.widget.FloatingActionButton
@@ -43,19 +30,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"
+        android:onClick="setUserAcl"
         android:layout_marginRight="20dp"
         android:clickable="true"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_add_black_24dp" />
 
-    <Button
-        android:id="@+id/delete_repo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/my_recycler_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/feedback_button"
-        android:text="delete"
-        android:textColor="@color/white" />
 </RelativeLayout>

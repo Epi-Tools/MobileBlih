@@ -5,6 +5,12 @@ public class RepoACL {
     private String token;
     private String name;
 
+    public RepoACL(String _email, String _token, String _currentProjet) {
+        email = _email;
+        token = _token;
+        name = _currentProjet;
+    }
+
     public String getEmail() {
         return email;
     }

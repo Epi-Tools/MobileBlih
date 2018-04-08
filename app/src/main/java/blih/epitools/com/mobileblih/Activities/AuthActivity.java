@@ -38,7 +38,7 @@ public class AuthActivity extends AppCompatActivity {
 
         // TODO error text handler on UI
         // TODO add alert loading on overlay
-        // TODO remove when design is done
+        // TODO remove Constant email and Constant pwd
 
         final Call<UserToken> call = service.authUser(new UserCredits(Constant.email, Constant.pwd));
         call.enqueue(new AuthCallBack(this));

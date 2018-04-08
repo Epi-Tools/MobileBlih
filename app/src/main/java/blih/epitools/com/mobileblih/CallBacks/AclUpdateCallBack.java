@@ -31,7 +31,7 @@ public class AclUpdateCallBack implements Callback<UserToken> {
             } catch (NullPointerException ex) {
                 alertMessage(response.body().getErr());
             }
-            //context.getAclList();
+            context.getAclList();
         } else {
             Log.e("Error", response.message());
         }
@@ -40,8 +40,10 @@ public class AclUpdateCallBack implements Callback<UserToken> {
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
         Log.e("failure", t.getStackTrace().toString());
+        alertMessage("Blih is unreacheable. Please check your internet connection and try again.");
     }
 
+    // TODO global or utils alert manager
     private void alertMessage(String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle("ACL");
