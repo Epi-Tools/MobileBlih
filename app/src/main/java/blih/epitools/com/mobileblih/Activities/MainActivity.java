@@ -2,9 +2,7 @@ package blih.epitools.com.mobileblih.Activities;
 
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,8 +14,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +54,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void getListFromCallBack(List<String> repoList) {
         list = repoList;
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
-        adapter = new ProjectsAdapter(this, list);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(adapter);
+        java.util.Collections.sort(list);
+        if (adapter == null) {
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
+            adapter = new ProjectsAdapter(this, list);
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.updateList(list);
+        }
     }
 
     public void setupEvents() {
@@ -138,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 if (!s.equals(""))
                     adapter.updateList(getCurrentList(s));
+                else
+                    adapter.updateList(list);
                 return false;
             }
         });
@@ -156,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> getCurrentList(String s)
     {
-        ArrayList currentList = new ArrayList();
+        List<String> currentList = new ArrayList();
         for (int i = 0; i < list.size(); i++)
         {
             if (list.get(i).toLowerCase().contains(s.toLowerCase()))

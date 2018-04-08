@@ -1,44 +1,55 @@
-package blih.epitools.com.mobileblih;
+package blih.epitools.com.mobileblih.Activities;
 
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.List;
 
-import blih.epitools.com.mobileblih.POJO.Project;
+import blih.epitools.com.mobileblih.POJO.UserACL;
+import blih.epitools.com.mobileblih.R;
 
 public class AclActivity extends AppCompatActivity {
 
-    private Project currentProjet;
-    private String email;
-    private String token;
+    private String currentProjet;
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<Project> list;
+    private List<UserACL> list;
     private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         setContentView(R.layout.acl_layout);
-    //    getDatasFromMain();
-
+        currentProjet = getIntent().getStringExtra("PROJECT");
+        getSupportActionBar().setTitle(currentProjet);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_acl, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+        } else if (id == R.id.action_delete) {
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     @Override
     protected void onResume()
@@ -128,11 +139,11 @@ public class AclActivity extends AppCompatActivity {
         obj.put("email", email);
         obj.put("token", token);
         obj.put("name", currentProjet.getName());
-        obj.put("acl", true);
+        obj.put("menu_acl", true);
 
         Log.e("Datas", serverUrl);
 
-        Log.e("acl", obj.toString());
+        Log.e("menu_acl", obj.toString());
 
         JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
                 new Response.Listener<JSONObject>() {
@@ -230,7 +241,7 @@ public class AclActivity extends AppCompatActivity {
 
         Log.e("Datas", serverUrl);
 
-        Log.e("acl", obj.toString());
+        Log.e("menu_acl", obj.toString());
 
         JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
                 new Response.Listener<JSONObject>() {
@@ -271,7 +282,7 @@ public class AclActivity extends AppCompatActivity {
         list = new ArrayList<>();
             Iterator<String> keys = obj.keys();
             JSONArray array = obj.names();
-            Log.e("List acl", array.toString());
+            Log.e("List menu_acl", array.toString());
 
             for (int i = 0; i < array.length(); i++)
             {
@@ -343,7 +354,7 @@ public class AclActivity extends AppCompatActivity {
         finish();
     }
 
-    private void updateAcl(String user, String acl) {
+    private void updateAcl(String user, String menu_acl) {
         String serverUrl = getResources().getString(R.string.server_url) + getResources().getString(R.string.update_acl);
 
         JSONObject obj = new JSONObject();
@@ -353,14 +364,14 @@ public class AclActivity extends AppCompatActivity {
             obj.put("token", token);
             obj.put("name", user);
             obj.put("repoName", currentProjet.getName());
-            obj.put("acl", acl);
+            obj.put("menu_acl", menu_acl);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Log.e("Datas", serverUrl);
 
-        Log.e("acl", obj.toString());
+        Log.e("menu_acl", obj.toString());
 
         JsonObjectRequest req = new JsonObjectRequest(serverUrl, obj,
                 new Response.Listener<JSONObject>() {

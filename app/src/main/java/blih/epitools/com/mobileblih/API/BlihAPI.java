@@ -1,6 +1,8 @@
 package blih.epitools.com.mobileblih.API;
 
 import blih.epitools.com.mobileblih.POJO.Repo;
+import blih.epitools.com.mobileblih.POJO.RepoACL;
+import blih.epitools.com.mobileblih.POJO.RepoAclUpdate;
 import blih.epitools.com.mobileblih.POJO.User;
 import blih.epitools.com.mobileblih.POJO.UserCredits;
 import blih.epitools.com.mobileblih.POJO.UserToken;
@@ -14,7 +16,6 @@ import retrofit2.http.POST;
 
 public interface BlihAPI {
 
-
     @POST("/api/auth")
     Call<UserToken> authUser(@Body UserCredits user);
 
@@ -26,6 +27,12 @@ public interface BlihAPI {
 
     @POST("api/repo/delete")
     Call<UserToken> deleteRepo(@Body Repo repo);
+
+    @POST("/api/repo/menu_acl/list")
+    Call<ResponseBody> aclList(@Body RepoACL repo);
+
+    @POST("/api/repo/menu_acl/update")
+    Call<ResponseBody> updateAcl(@Body RepoAclUpdate repo);
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://blih-preprod.cleverapps.io")

@@ -2,11 +2,8 @@
     <string name="app_name">Blih</string>
     <string name="action_settings">Settings</string>
     <string name="server_url">https://blih-preprod.cleverapps.io</string>
-    <string name="auth">/api/auth</string>
     <string name="acl_list">/api/repo/acl/list</string>
-    <string name="create">/api/repo/create</string>
     <string name="delete">/api/repo/delete</string>
-    <string name="repo_list">/api/repo/list</string>
     <string name="update_acl">/api/repo/acl/update</string>
     <string name="search_repository">Search repository...</string>
     <string-array name="acls_editor">

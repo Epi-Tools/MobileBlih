@@ -5,11 +5,11 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
 import blih.epitools.com.mobileblih.CallBacks.AuthCallBack;
+import blih.epitools.com.mobileblih.Constant;
 import blih.epitools.com.mobileblih.POJO.UserCredits;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.R;
@@ -19,7 +19,6 @@ import retrofit2.Call;
 
 public class AuthActivity extends AppCompatActivity {
 
-    Button valid;
     EditText email;
     //TODO add Github button to login
 
@@ -39,15 +38,16 @@ public class AuthActivity extends AppCompatActivity {
 
         // TODO error text handler on UI
         // TODO add alert loading on overlay
+        // TODO remove when design is done
 
-        final Call<UserToken> call = service.authUser(new UserCredits(email.getText().toString(), pwd.getText().toString()));
+        final Call<UserToken> call = service.authUser(new UserCredits(Constant.email, Constant.pwd));
         call.enqueue(new AuthCallBack(this));
     }
 
     public void loadMainActivity(String token)
     {
         Intent intent = new Intent(this, MainActivity.class);
-        User.getInstance().setUserInfos(email.getText().toString(), token);
+        User.getInstance().setUserInfos(Constant.email, token);
         startActivity(intent);
     }
 
