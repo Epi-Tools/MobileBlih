@@ -2,4 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="blih.epitools.com.mobileblih.Activities.MainActivity" >
+    <item
+        android:id="@+id/m_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search_repository"
+        app:actionLayout="@layout/search_view_layout"
+        app:showAsAction="always" />
 </menu>

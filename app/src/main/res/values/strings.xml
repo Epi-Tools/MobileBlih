@@ -8,6 +8,7 @@
     <string name="delete">/api/repo/delete</string>
     <string name="repo_list">/api/repo/list</string>
     <string name="update_acl">/api/repo/acl/update</string>
+    <string name="search_repository">Search repository...</string>
     <string-array name="acls_editor">
         <item>r</item>
         <item>rw</item>
