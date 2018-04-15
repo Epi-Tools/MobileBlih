@@ -24,8 +24,10 @@ public class AclUpdateCallBack implements Callback<UserToken> {
         if (response.isSuccessful()) {
             try {
                 try {
+                    Log.e("Update", response.message());
                     alertMessage(response.body().getBody().getMessage());
                 } catch (NullPointerException ex) {
+                    Log.e("Update 2", response.message());
                     alertMessage(response.body().get_body().getMessage());
                 }
             } catch (NullPointerException ex) {
@@ -33,7 +35,7 @@ public class AclUpdateCallBack implements Callback<UserToken> {
             }
             context.getAclList();
         } else {
-            Log.e("Error", response.message());
+            Log.e("Error Update", response.message());
         }
     }
 

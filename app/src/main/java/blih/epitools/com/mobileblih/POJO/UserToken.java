@@ -3,8 +3,8 @@ package blih.epitools.com.mobileblih.POJO;
 public class UserToken {
     private String token;
     private String err;
-    private ProjectListBody body;
-    private ProjectListBody _body;
+    private ProjectBody body;
+    private ProjectBody _body;
 
     public String getToken() {
         return token;
@@ -14,11 +14,11 @@ public class UserToken {
         this.token = token;
     }
 
-    public ProjectListBody getBody() {
+    public ProjectBody getBody() {
         return body;
     }
 
-    public void setBody(ProjectListBody body) {
+    public void setBody(ProjectBody body) {
         this.body = body;
     }
 
@@ -30,11 +30,11 @@ public class UserToken {
         this.err = err;
     }
 
-    public ProjectListBody get_body() {
+    public ProjectBody get_body() {
         return _body;
     }
 
-    public void set_body(ProjectListBody _body) {
+    public void set_body(ProjectBody _body) {
         this._body = _body;
     }
 }

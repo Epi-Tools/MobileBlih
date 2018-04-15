@@ -1,6 +1,0 @@
-<android.support.v7.widget.SearchView
-    android:id="@+id/search_view"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:theme="@style/SearchViewTheme"
-    xmlns:android="http://schemas.android.com/apk/res/android" />

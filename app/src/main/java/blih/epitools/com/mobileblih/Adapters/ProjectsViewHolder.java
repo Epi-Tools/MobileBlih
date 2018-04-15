@@ -1,4 +1,4 @@
-package blih.epitools.com.mobileblih;
+package blih.epitools.com.mobileblih.Adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,14 +13,13 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import blih.epitools.com.mobileblih.Activities.MainActivity;
+import blih.epitools.com.mobileblih.R;
 
-class ProjectsViewHolder extends RecyclerView.ViewHolder{
+class ProjectsViewHolder extends RecyclerView.ViewHolder {
 
     private TextView ProjectName;
     private ImageButton deleteRepo;
     private Context context;
-
-    // TODO add delete functionnality
 
     public ProjectsViewHolder(View itemView, Context _context) {
         super(itemView);

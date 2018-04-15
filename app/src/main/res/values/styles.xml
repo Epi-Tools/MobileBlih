@@ -14,16 +14,4 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
-    <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView.ActionBar">
-        <item name="layout">@layout/toolbar_search_view</item>
-        <item name="commitIcon">@drawable/ic_search</item>
-        <item name="colorControlNormal">@color/material_light_active_icon</item>
-        <item name="colorControlHighlight">@color/material_ripple_light</item>
-        <item name="android:maxWidth">9999dp</item>
-    </style>
-
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="searchViewStyle">@style/SearchViewTheme</item>
-    </style>
 </resources>

@@ -7,33 +7,10 @@
     android:layout_height="match_parent"
     tools:context="blih.epitools.com.mobileblih.Activities.MainActivity">
 
-    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:collapseIcon="@drawable/ic_search"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/ToolbarTheme" />
-
-        <View
-            android:id="@+id/anchor_dropdown"
-            android:layout_width="match_parent"
-            android:layout_height="0dp" />
-
-    </android.support.design.widget.AppBarLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/repo_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appBar"
         android:layout_alignParentBottom="true"
         android:scrollbars="vertical" />
 

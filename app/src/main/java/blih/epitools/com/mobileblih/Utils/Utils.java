@@ -43,7 +43,7 @@ public class Utils {
         }
         JSONObject obj = null;
         try {
-            obj = request.getJSONObject("body").getJSONObject("repositories");
+            obj = request.getJSONObject("body");
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -28,11 +28,11 @@ public interface BlihAPI {
     @POST("api/repo/delete")
     Call<UserToken> deleteRepo(@Body Repo repo);
 
-    @POST("/api/repo/menu_acl/list")
+    @POST("/api/repo/acl/list")
     Call<ResponseBody> aclList(@Body RepoACL repo);
 
-    @POST("/api/repo/menu_acl/update")
-    Call<ResponseBody> updateAcl(@Body RepoAclUpdate repo);
+    @POST("/api/repo/acl/update")
+    Call<UserToken> updateAcl(@Body RepoAclUpdate repo);
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://blih-preprod.cleverapps.io")

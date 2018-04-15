@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
@@ -23,7 +22,7 @@ import blih.epitools.com.mobileblih.CallBacks.RepoCallBack;
 import blih.epitools.com.mobileblih.CallBacks.ProjectsListCallBack;
 import blih.epitools.com.mobileblih.POJO.Repo;
 import blih.epitools.com.mobileblih.POJO.UserToken;
-import blih.epitools.com.mobileblih.ProjectsAdapter;
+import blih.epitools.com.mobileblih.Adapters.ProjectsAdapter;
 import blih.epitools.com.mobileblih.R;
 import blih.epitools.com.mobileblih.POJO.User;
 import okhttp3.ResponseBody;
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
-        setupEvents();
     }
 
     @Override
@@ -57,21 +55,14 @@ public class MainActivity extends AppCompatActivity {
         java.util.Collections.sort(list);
         if (adapter == null) {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
             adapter = new ProjectsAdapter(this, list);
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             recyclerView.setAdapter(adapter);
         } else {
             adapter.updateList(list);
         }
-    }
-
-    public void setupEvents() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
     }
 
     public void getRepoList()
@@ -123,10 +114,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        MenuItem search_layout = menu.findItem(R.id.m_search);
-        android.support.v7.widget.SearchView search = (android.support.v7.widget.SearchView) search_layout.getActionView().findViewById(R.id.search_view);
-        EditText searchEditText = (EditText) search.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        //TODO refactor search view
+/*        EditText searchEditText = (EditText) search.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.white));
         searchEditText.setHintTextColor(getResources().getColor(R.color.white));
         search.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
@@ -143,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.updateList(list);
                 return false;
             }
-        });
+        });*/
         return true;
     }
 

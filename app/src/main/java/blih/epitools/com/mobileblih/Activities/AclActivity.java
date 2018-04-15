@@ -6,18 +6,25 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Objects;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
+import blih.epitools.com.mobileblih.Adapters.AclAdapter;
 import blih.epitools.com.mobileblih.CallBacks.AclListCallBack;
+import blih.epitools.com.mobileblih.CallBacks.AclUpdateCallBack;
 import blih.epitools.com.mobileblih.CallBacks.RepoCallBack;
 import blih.epitools.com.mobileblih.POJO.Repo;
 import blih.epitools.com.mobileblih.POJO.RepoACL;
@@ -32,9 +39,10 @@ import retrofit2.Call;
 public class AclActivity extends AppCompatActivity {
 
     private String currentProjet;
-    private List<UserACL> list;
-    private Spinner spinner;
+    private AclAdapter adapter;
+    private String aclSelected;
 
+    // TODO When no acl, show a placeholder with "No ACLs" message or something in the middle of the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,45 +113,56 @@ public class AclActivity extends AppCompatActivity {
     public void updateAcl(String userName, String acl) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
-        Call<ResponseBody> call = service.updateAcl(new RepoAclUpdate(User.getInstance().getEmail(), User.getInstance().getToken(), userName, currentProjet, acl));
-        call.enqueue(new AclListCallBack(this));
+        Call<UserToken> call = service.updateAcl(new RepoAclUpdate(User.getInstance().getEmail(), User.getInstance().getToken(), userName, currentProjet, acl));
+        call.enqueue(new AclUpdateCallBack(this));
     }
 
     public void getAclListFromCallBack(List<UserACL> repoList) {
-        list = repoList;
-      /*  if (adapter == null) {
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
-            adapter = new ProjectsAdapter(this, list);
+        List<UserACL> list = repoList;
+        Log.e("List", list.toString());
+        if (adapter == null) {
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.acl_list);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            adapter = new AclAdapter(this, list);
             recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
             recyclerView.setAdapter(adapter);
         } else {
             adapter.updateList(list);
-        }*/
+        }
     }
 
     public void setUserAcl(View view) {
         LayoutInflater inflater = this.getLayoutInflater();
 
         View dialogView = inflater.inflate(R.layout.acl_creator, null);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add ACL").setView(dialogView);
-
         final EditText username = (EditText) dialogView.findViewById(R.id.username_acl);
 
-        final String[] aclSelected = {"r"};
+        spinnerHandler(dialogView, R.id.spinner_acl_create, R.array.acls_creator);
+        aclBuilder(dialogView, username.getText().toString(), "Add ACL");
+    }
 
-        spinner = (Spinner) dialogView.findViewById(R.id.spinner_acl_create);
+    public void editAcl(UserACL user) {
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.edit_layout, null);
+        TextView username = (TextView) dialogView.findViewById(R.id.username_acl);
+        username.setText(user.getName());
+
+        spinnerHandler(dialogView, R.id.spinner_acl_edit, R.array.acls_editor);
+        aclBuilder(dialogView, username.getText().toString(), "Edit ACL");
+    }
+
+    public void spinnerHandler(View dialogView, int id, int array) {
+        Spinner spinner = (Spinner) dialogView.findViewById(id);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.acls_creator, android.R.layout.simple_spinner_item);
+                array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                aclSelected[0] = parent.getSelectedItem().toString();
+                aclSelected = parent.getSelectedItem().toString();
             }
 
             @Override
@@ -151,74 +170,29 @@ public class AclActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void aclBuilder(final View dialogView, final String username, final String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(title).setView(dialogView);
 
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                if (!Objects.equals(username.getText().toString(), ""))
-                    updateAcl(username.getText().toString(), aclSelected[0]);
-                else
-                    Snackbar.make(findViewById(R.id.acl_view),
-                            "Please enter the username.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                if (aclSelected.equals("None"))
+                    aclSelected = "";
+                if (title.contains("Add ACL")) {
+                    final EditText user = (EditText) dialogView.findViewById(R.id.username_acl);
+                    updateAcl(user.getText().toString(), aclSelected);
+                } else {
+                    updateAcl(username, aclSelected);
+                }
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
         }).show();
-    }
-
-    // TODO refactor with adapter
-    private void editAcl(int pos)
-    {
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        View dialogView = inflater.inflate(R.layout.edit_layout, null);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Edit ACL").setView(dialogView);
-
-        if (list.size() != 0)
-        {
-            final TextView username = (TextView) dialogView.findViewById(R.id.username_acl);
-
-            final String[] aclSelected = {"r"};
-
-            username.setText(list.get(pos).getName());
-
-            spinner = (Spinner) dialogView.findViewById(R.id.spinner_acl_edit);
-
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                    R.array.acls_editor, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(adapter);
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    aclSelected[0] = parent.getSelectedItem().toString();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    if (aclSelected[0].equals("None"))
-                        aclSelected[0] = "";
-                    updateAcl(username.getText().toString(), aclSelected[0]);
-                }
-            })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                        }
-                    })
-                    .show();
-        }
-
     }
 
 }

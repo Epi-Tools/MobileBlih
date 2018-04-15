@@ -1,4 +1,4 @@
-package blih.epitools.com.mobileblih;
+package blih.epitools.com.mobileblih.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import blih.epitools.com.mobileblih.Activities.AclActivity;
+import blih.epitools.com.mobileblih.R;
 
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsViewHolder> {
