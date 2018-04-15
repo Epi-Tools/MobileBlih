@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,19 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private List<String> list;
     private ProjectsAdapter adapter;
 
-    //TODO loading animation when loading projects
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+        Utils.showLoading(this, "Please wait...");
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         getRepoList();
     }
@@ -56,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
     public void getListFromCallBack(List<String> repoList) {
         list = repoList;
         java.util.Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        TextView noRepo = (TextView) findViewById(R.id.no_repo);
+        if (list.size() == 0) {
+            noRepo.setVisibility(View.VISIBLE);
+        } else {
+            noRepo.setVisibility(View.GONE);
+        }
         if (adapter == null) {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -142,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 

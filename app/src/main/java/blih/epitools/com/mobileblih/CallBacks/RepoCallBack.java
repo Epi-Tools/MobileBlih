@@ -17,7 +17,6 @@ public class RepoCallBack implements Callback<UserToken> {
 
     private Context context;
 
-    // TODO handle error management
     public RepoCallBack(Context _context) {
         context = _context;
     }

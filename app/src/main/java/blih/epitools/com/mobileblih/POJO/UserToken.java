@@ -3,6 +3,7 @@ package blih.epitools.com.mobileblih.POJO;
 public class UserToken {
     private String token;
     private String err;
+    private String error;
     private ProjectBody body;
     private ProjectBody _body;
 
@@ -36,5 +37,13 @@ public class UserToken {
 
     public void set_body(ProjectBody _body) {
         this._body = _body;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

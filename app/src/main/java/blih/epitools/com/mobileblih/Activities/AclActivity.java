@@ -37,7 +37,6 @@ public class AclActivity extends AppCompatActivity {
     private AclAdapter adapter;
     private String aclSelected;
 
-    // TODO When no acl, show a placeholder with "No ACLs" message or something in the middle of the screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +116,12 @@ public class AclActivity extends AppCompatActivity {
 
     public void getAclListFromCallBack(List<UserACL> repoList) {
         List<UserACL> list = repoList;
+        TextView noACL = (TextView) findViewById(R.id.no_acl);
+        if (list.size() == 0) {
+            noACL.setVisibility(View.VISIBLE);
+        } else {
+            noACL.setVisibility(View.GONE);
+        }
         if (adapter == null) {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.acl_list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -191,5 +196,6 @@ public class AclActivity extends AppCompatActivity {
             }
         }).show();
     }
+
 
 }

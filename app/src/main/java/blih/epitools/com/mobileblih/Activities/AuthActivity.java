@@ -1,6 +1,5 @@
 package blih.epitools.com.mobileblih.Activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
 import blih.epitools.com.mobileblih.CallBacks.AuthCallBack;
-import blih.epitools.com.mobileblih.Constant;
 import blih.epitools.com.mobileblih.POJO.UserCredits;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.R;
@@ -39,10 +37,9 @@ public class AuthActivity extends AppCompatActivity {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
         // TODO error text handler on UI
-        // TODO add alert loading on overlay
-        // TODO remove Constant email and Constant pwd
 
-        final Call<UserToken> call = service.authUser(new UserCredits(Constant.email, Constant.pwd));
+        final Call<UserToken> call = service.authUser(new UserCredits(email.getText().toString(), pwd.getText().toString()));
+
         Utils.showLoading(this, "Authenticating...");
         call.enqueue(new AuthCallBack(this));
     }
@@ -50,7 +47,7 @@ public class AuthActivity extends AppCompatActivity {
     public void loadMainActivity(String token)
     {
         Intent intent = new Intent(this, MainActivity.class);
-        User.getInstance().setUserInfos(Constant.email, token);
+        User.getInstance().setUserInfos(email.getText().toString(), token);
         startActivity(intent);
     }
 

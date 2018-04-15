@@ -20,12 +20,20 @@ public class AuthCallBack implements Callback<UserToken> {
         context = _context;
     }
 
-    //TODO callback management
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
         Utils.hideLoading();
         if (response.isSuccessful()) {
-            context.loadMainActivity(response.body().getToken());
+            Log.e("Response", response.message());
+            if (response.body().getToken() == null) {
+                if (response.body().getError() == null) {
+                    alertMessage(response.body().getErr());
+                } else {
+                    alertMessage(response.body().getError());
+                }
+            } else {
+                context.loadMainActivity(response.body().getToken());
+            }
         } else {
             Log.e("Error", response.message());
             alertMessage(response.message());

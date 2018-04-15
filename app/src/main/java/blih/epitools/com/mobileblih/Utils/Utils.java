@@ -84,9 +84,5 @@ public class Utils {
         pd.hide();
     }
 
-    public static void alertMessage(String title, String message ) {
 
-    }
-
-    public void deleteRepo(){}
 }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import blih.epitools.com.mobileblih.Activities.MainActivity;
 import blih.epitools.com.mobileblih.Utils.Utils;
 import okhttp3.ResponseBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

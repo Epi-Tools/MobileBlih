@@ -19,7 +19,6 @@ public class AclUpdateCallBack implements Callback<UserToken> {
         context = _context;
     }
 
-    //TODO callback management
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
         Utils.hideLoading();

@@ -30,10 +30,19 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"
-        android:onClick="setUserAcl"
         android:layout_marginRight="20dp"
         android:clickable="true"
+        android:onClick="setUserAcl"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_add_black_24dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No ACLS"
+        android:textSize="30dp"
+        android:visibility="gone"
+        android:id="@+id/no_acl"
+        android:textStyle="bold" />
 </RelativeLayout>

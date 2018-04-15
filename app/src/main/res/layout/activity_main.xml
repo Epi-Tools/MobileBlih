@@ -26,4 +26,13 @@
         android:onClick="createProject"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_add_black_24dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Repositories"
+        android:textSize="30dp"
+        android:visibility="gone"
+        android:id="@+id/no_repo"
+        android:textStyle="bold" />
 </RelativeLayout>

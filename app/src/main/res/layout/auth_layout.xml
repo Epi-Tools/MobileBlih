@@ -84,4 +84,20 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:textColor="@color/white" />
+
 </RelativeLayout>
+<!--
+<Button
+        android:id="@+id/github_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/valid"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:background="@color/white"
+        android:text=" Issues ? "
+        android:onClick="githubAccess"
+        android:layout_marginLeft="25dp"
+        android:drawableLeft="@drawable/github"
+        android:layout_marginRight="25dp"/>
+        -->
