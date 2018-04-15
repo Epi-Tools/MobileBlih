@@ -6,6 +6,7 @@ import android.util.Log;
 
 import blih.epitools.com.mobileblih.Activities.AclActivity;
 import blih.epitools.com.mobileblih.POJO.UserToken;
+import blih.epitools.com.mobileblih.Utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,13 +22,12 @@ public class AclUpdateCallBack implements Callback<UserToken> {
     //TODO callback management
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
+        Utils.hideLoading();
         if (response.isSuccessful()) {
             try {
                 try {
-                    Log.e("Update", response.message());
                     alertMessage(response.body().getBody().getMessage());
                 } catch (NullPointerException ex) {
-                    Log.e("Update 2", response.message());
                     alertMessage(response.body().get_body().getMessage());
                 }
             } catch (NullPointerException ex) {
@@ -35,12 +35,14 @@ public class AclUpdateCallBack implements Callback<UserToken> {
             }
             context.getAclList();
         } else {
+            alertMessage(response.message());
             Log.e("Error Update", response.message());
         }
     }
 
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
+        Utils.hideLoading();
         Log.e("failure", t.getStackTrace().toString());
         alertMessage("Blih is unreacheable. Please check your internet connection and try again.");
     }

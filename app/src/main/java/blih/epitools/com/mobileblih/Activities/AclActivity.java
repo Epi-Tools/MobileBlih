@@ -3,23 +3,17 @@ package blih.epitools.com.mobileblih.Activities;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-
-import org.w3c.dom.Text;
-
 import java.util.List;
-import java.util.Objects;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
 import blih.epitools.com.mobileblih.Adapters.AclAdapter;
@@ -33,6 +27,7 @@ import blih.epitools.com.mobileblih.POJO.User;
 import blih.epitools.com.mobileblih.POJO.UserACL;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.R;
+import blih.epitools.com.mobileblih.Utils.Utils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -51,6 +46,7 @@ public class AclActivity extends AppCompatActivity {
         currentProjet = getIntent().getStringExtra("PROJECT");
         getSupportActionBar().setTitle(currentProjet);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Utils.showLoading(this, "Please wait...");
     }
 
     @Override
@@ -100,6 +96,7 @@ public class AclActivity extends AppCompatActivity {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
         Call<UserToken> call = service.deleteRepo(new Repo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true));
+        Utils.showLoading(this, "Delete Repository...");
         call.enqueue(new RepoCallBack(this));
     }
 
@@ -114,6 +111,7 @@ public class AclActivity extends AppCompatActivity {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
         Call<UserToken> call = service.updateAcl(new RepoAclUpdate(User.getInstance().getEmail(), User.getInstance().getToken(), userName, currentProjet, acl));
+        Utils.showLoading(this, "Update acl...");
         call.enqueue(new AclUpdateCallBack(this));
     }
 

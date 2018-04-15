@@ -27,6 +27,7 @@ import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.Adapters.ProjectsAdapter;
 import blih.epitools.com.mobileblih.R;
 import blih.epitools.com.mobileblih.POJO.User;
+import blih.epitools.com.mobileblih.Utils.Utils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -70,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     public void getRepoList()
     {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
-
         Call<ResponseBody> call = service.repoList(User.getInstance());
         call.enqueue(new ProjectsListCallBack(this));
     }
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
         Call<UserToken> call = service.createRepo(new Repo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true));
+        Utils.showLoading(this, "Create Repository...");
         call.enqueue(new RepoCallBack(this));
     }
 
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
         Call<UserToken> call = service.deleteRepo(new Repo(User.getInstance().getEmail(), User.getInstance().getToken(), projectName, true));
+        Utils.showLoading(this, "Delete Repository...");
         call.enqueue(new RepoCallBack(this));
     }
 
@@ -114,11 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //TODO refactor search view
         EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.white));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
@@ -142,11 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 

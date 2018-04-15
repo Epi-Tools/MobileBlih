@@ -1,5 +1,8 @@
 package blih.epitools.com.mobileblih.Utils;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +14,8 @@ import java.util.List;
 import blih.epitools.com.mobileblih.POJO.UserACL;
 
 public class Utils {
+
+    private static ProgressDialog pd;
 
     public static List<String> parseProjectsList(JSONObject request) {
         JSONObject obj = null;
@@ -68,4 +73,20 @@ public class Utils {
         }
         return list;
     }
+
+    public static void showLoading(Context ctx, String Message) {
+        pd = new ProgressDialog(ctx);
+        pd.setMessage(Message);
+        pd.show();
+    }
+
+    public static void hideLoading() {
+        pd.hide();
+    }
+
+    public static void alertMessage(String title, String message ) {
+
+    }
+
+    public void deleteRepo(){}
 }

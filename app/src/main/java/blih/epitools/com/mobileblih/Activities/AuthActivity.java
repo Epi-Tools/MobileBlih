@@ -1,5 +1,6 @@
 package blih.epitools.com.mobileblih.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import blih.epitools.com.mobileblih.POJO.UserCredits;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.R;
 import blih.epitools.com.mobileblih.POJO.User;
+import blih.epitools.com.mobileblih.Utils.Utils;
 import retrofit2.Call;
 
 
@@ -41,6 +43,7 @@ public class AuthActivity extends AppCompatActivity {
         // TODO remove Constant email and Constant pwd
 
         final Call<UserToken> call = service.authUser(new UserCredits(Constant.email, Constant.pwd));
+        Utils.showLoading(this, "Authenticating...");
         call.enqueue(new AuthCallBack(this));
     }
 
