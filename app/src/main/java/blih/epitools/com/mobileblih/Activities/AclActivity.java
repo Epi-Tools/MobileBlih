@@ -119,7 +119,6 @@ public class AclActivity extends AppCompatActivity {
 
     public void getAclListFromCallBack(List<UserACL> repoList) {
         List<UserACL> list = repoList;
-        Log.e("List", list.toString());
         if (adapter == null) {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.acl_list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

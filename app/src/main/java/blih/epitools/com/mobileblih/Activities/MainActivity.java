@@ -3,11 +3,13 @@ package blih.epitools.com.mobileblih.Activities;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getListFromCallBack(List<String> repoList) {
         list = repoList;
-        java.util.Collections.sort(list);
+        java.util.Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
         if (adapter == null) {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.repo_list);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -114,11 +116,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         //TODO refactor search view
-/*        EditText searchEditText = (EditText) search.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.white));
-        searchEditText.setHintTextColor(getResources().getColor(R.color.white));
-        search.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+        searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -132,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.updateList(list);
                 return false;
             }
-        });*/
+        });
         return true;
     }
 

@@ -20,6 +20,8 @@ public class Utils {
             e.printStackTrace();
         }
         List<String> list = new ArrayList<>();
+        if (obj == null)
+            return list;
         Iterator<String> keys = obj.keys();
         JSONArray array = obj.names();
 
@@ -48,6 +50,9 @@ public class Utils {
             e.printStackTrace();
         }
         List<UserACL> list = new ArrayList<>();
+        if (obj == null) {
+            return list;
+        }
         Iterator<String> keys = obj.keys();
         JSONArray array = obj.names();
 
