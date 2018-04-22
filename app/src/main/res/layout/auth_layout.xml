@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/auth_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,7 +43,8 @@
         android:layout_marginRight="25dp"
         android:ems="10"
         android:backgroundTint="@color/white"
-        android:textColorHint="@color/gray"
+        android:textCursorDrawable="@color/white"
+        android:textColorHint="@color/white"
         android:textColorHighlight="@color/white"
         android:layout_marginBottom="20dp"
         android:inputType="textEmailAddress" />
@@ -67,7 +67,8 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/white"
         android:textColorHighlight="@color/white"
-        android:textColorHint="@color/gray"
+        android:textColorHint="@color/white"
+        android:textCursorDrawable="@color/white"
         android:ems="10"
         android:inputType="textPassword" />
 
@@ -84,20 +85,17 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:textColor="@color/white" />
-
-</RelativeLayout>
-<!--
-<Button
+    <TextView
         android:id="@+id/github_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/valid"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:background="@color/white"
-        android:text=" Issues ? "
-        android:onClick="githubAccess"
+        android:layout_marginTop="30dp"
+        android:text="You liked this project ? Star on Github !"
+        android:textColor="@color/white"
+        android:clickable="true"
+        android:textAlignment="center"
         android:layout_marginLeft="25dp"
-        android:drawableLeft="@drawable/github"
         android:layout_marginRight="25dp"/>
-        -->
+</RelativeLayout>

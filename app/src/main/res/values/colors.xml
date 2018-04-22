@@ -7,4 +7,5 @@
     <color name="gray">#939393</color>
     <color name="feedBack">#982c62</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000</color>
 </resources>
