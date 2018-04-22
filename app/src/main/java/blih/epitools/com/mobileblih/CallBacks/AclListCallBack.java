@@ -1,7 +1,5 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.io.IOException;
@@ -32,27 +30,14 @@ public class AclListCallBack implements Callback<ResponseBody> {
             }
         } else {
             Log.e("Error", response.message());
-            alertMessage(response.message());
+            Utils.alertManager(context, "ACL", response.message());
         }
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         Utils.hideLoading();
-        Log.e("failure", t.getStackTrace().toString());
-        alertMessage("Blih is unreacheable. Please check your internet connection and try again.");
+        Utils.alertManager(context, "ACL", "Blih is unreacheable. Please check your internet connection and try again.");
     }
 
-    private void alertMessage(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle("ACL");
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
 }

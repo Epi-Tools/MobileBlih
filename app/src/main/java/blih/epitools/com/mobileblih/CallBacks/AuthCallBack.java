@@ -1,8 +1,6 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import blih.epitools.com.mobileblih.Activities.AuthActivity;
@@ -27,37 +25,22 @@ public class AuthCallBack implements Callback<UserToken> {
             Log.e("Response", response.message());
             if (response.body().getToken() == null) {
                 if (response.body().getError() == null) {
-                    alertMessage(response.body().getErr());
+                    Utils.alertManager(context, "Authentication", response.body().getErr());
                 } else {
-                    alertMessage(response.body().getError());
+                    Utils.alertManager(context, "Authentication", response.body().getError());
                 }
             } else {
                 context.loadMainActivity(response.body().getToken());
             }
         } else {
-            Log.e("Error", response.message());
-            alertMessage(response.message());
+            Utils.alertManager(context, "Authentication", response.message());
         }
     }
 
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
         Utils.hideLoading();
-        Log.e("failure", t.getStackTrace().toString());
-        alertMessage("Blih is unreacheable. Please check your internet connection and try again.");
-    }
-
-    private void alertMessage(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle("Authentication");
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+        Utils.alertManager(context, "Authentication", "Blih is unreacheable. Please check your internet connection and try again.");
     }
 
 }
