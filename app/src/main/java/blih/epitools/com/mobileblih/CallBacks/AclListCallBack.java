@@ -1,7 +1,5 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
-import android.util.Log;
-
 import java.io.IOException;
 
 import blih.epitools.com.mobileblih.Activities.AclActivity;
@@ -19,6 +17,12 @@ public class AclListCallBack implements Callback<ResponseBody> {
         context = _context;
     }
 
+    /**
+     * @param call
+     * @param response
+     *
+     * Callback to get acl list
+     */
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         Utils.hideLoading();
@@ -29,11 +33,16 @@ public class AclListCallBack implements Callback<ResponseBody> {
                 e.printStackTrace();
             }
         } else {
-            Log.e("Error", response.message());
             Utils.alertManager(context, "ACL", response.message());
         }
     }
 
+    /**
+     * @param call
+     * @param t
+     *
+     * CallBack when the call isn't working
+     */
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         Utils.hideLoading();

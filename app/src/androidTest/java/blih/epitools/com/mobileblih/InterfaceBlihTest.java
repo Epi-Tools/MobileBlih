@@ -51,7 +51,7 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class TestInterfaceBlih {
+public class InterfaceBlihTest {
     @Rule
     public ActivityTestRule<AuthActivity> mActivityRule =
             new ActivityTestRule<>(AuthActivity.class);

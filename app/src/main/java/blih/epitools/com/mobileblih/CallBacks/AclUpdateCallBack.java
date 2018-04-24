@@ -1,7 +1,5 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
-import android.util.Log;
-
 import blih.epitools.com.mobileblih.Activities.AclActivity;
 import blih.epitools.com.mobileblih.POJO.UserToken;
 import blih.epitools.com.mobileblih.Utils.Utils;
@@ -17,6 +15,12 @@ public class AclUpdateCallBack implements Callback<UserToken> {
         context = _context;
     }
 
+    /**
+     * @param call
+     * @param response
+     *
+     * Callback to update a specific user acl
+     */
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
         Utils.hideLoading();
@@ -36,6 +40,12 @@ public class AclUpdateCallBack implements Callback<UserToken> {
         }
     }
 
+    /**
+     * @param call
+     * @param t
+     *
+     * Callback when the call doesn't work
+     */
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
         Utils.hideLoading();

@@ -22,12 +22,26 @@ public class AclAdapter extends RecyclerView.Adapter<AclViewHolder> {
         context = _context;
     }
 
+    /**
+     * @param parent
+     * @param viewType
+     * @return
+     *
+     * create AclViewHolder
+     *
+     */
     @Override
     public AclViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.acl_row, parent, false);
         return new AclViewHolder(itemView);
     }
 
+    /**
+     * @param holder
+     * @param position
+     *
+     * bind acl list and handle click event
+     */
     @Override
     public void onBindViewHolder(final AclViewHolder holder, final int position) {
         holder.bind(aclLists.get(position));
@@ -44,6 +58,11 @@ public class AclAdapter extends RecyclerView.Adapter<AclViewHolder> {
         return aclLists.size();
     }
 
+    /**
+     * @param list
+     *
+     * update acl list
+     */
     public void updateList(List<UserACL> list) {
         aclLists = list;
         notifyDataSetChanged();

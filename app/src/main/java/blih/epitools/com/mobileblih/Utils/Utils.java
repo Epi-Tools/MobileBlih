@@ -19,6 +19,12 @@ public class Utils {
 
     private static ProgressDialog pd;
 
+    /**
+     * @param request request to parse
+     * @return parsed list
+     *
+     * Get requestJson from callback and convert it to a list of repo name
+     */
     public static List<String> parseProjectsList(JSONObject request) {
         JSONObject obj = null;
         try {
@@ -43,6 +49,12 @@ public class Utils {
         return list;
     }
 
+    /**
+     * @param data convert string jsonobject
+     * @return parsed list
+     *
+     * Get requestJson from callback and convert it to a list of acl name
+     */
     public static List<UserACL> parseProjectsList(String data) {
         JSONObject request = null;
         try {
@@ -76,17 +88,34 @@ public class Utils {
         return list;
     }
 
+    /**
+     * @param ctx current context
+     * @param Message message to show on
+     *
+     * show progressDialog on current Activity
+     */
     public static void showLoading(Context ctx, String Message) {
         pd = new ProgressDialog(ctx);
         pd.setMessage(Message);
         pd.show();
     }
 
+    /**
+     * hide progressDialog
+     */
     public static void hideLoading() {
         pd.hide();
     }
 
 
+    /**
+     * @param ctx current context
+     * @param title alert title
+     * @param message alert message
+     *
+     * Create a alert for each callback
+     *
+     */
     public static void alertManager(Context ctx, String title, String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
         alertDialog.setTitle(title);

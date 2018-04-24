@@ -1,6 +1,5 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +21,12 @@ public class ProjectsListCallBack implements Callback<ResponseBody> {
         context = _context;
     }
 
+    /**
+     * @param call
+     * @param response
+     *
+     * Callback to get the repository list
+     */
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         Utils.hideLoading();
@@ -40,6 +45,12 @@ public class ProjectsListCallBack implements Callback<ResponseBody> {
         }
     }
 
+    /**
+     * @param call
+     * @param t
+     *
+     * Callback when the call isn't working
+     */
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         Utils.hideLoading();

@@ -5,12 +5,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import org.json.JSONException;
 
 import blih.epitools.com.mobileblih.Activities.MainActivity;
 import blih.epitools.com.mobileblih.R;
@@ -21,6 +17,12 @@ class ProjectsViewHolder extends RecyclerView.ViewHolder {
     private ImageButton deleteRepo;
     private Context context;
 
+    /**
+     * @param itemView current item
+     * @param _context current context
+     *
+     * get buttons from view
+     */
     public ProjectsViewHolder(View itemView, Context _context) {
         super(itemView);
         ProjectName = (TextView) itemView.findViewById(R.id.projectName);
@@ -28,6 +30,11 @@ class ProjectsViewHolder extends RecyclerView.ViewHolder {
         context = _context;
     }
 
+    /**
+     * @param repoName name of the repository
+     *
+     * Get the current repository for each item and update their name and create alert on delete button
+     */
     public void bind(final String repoName) {
         ProjectName.setText(repoName);
         deleteRepo.setOnClickListener(new View.OnClickListener() {

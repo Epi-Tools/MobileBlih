@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private List<String> list;
     private ProjectsAdapter adapter;
 
+    /**
+     * @param savedInstanceState
+     *
+     * Initialise the main activity, orientation and
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +50,19 @@ public class MainActivity extends AppCompatActivity {
         Utils.showLoading(this, "Please wait...");
     }
 
+    /**
+     * Initialise the list of repository
+     */
     @Override
     protected void onResume() {
         super.onResume();
         getRepoList();
     }
 
+    /**
+     * @param repoList list of repositories
+     * Initialise recyclerview with Blih API Data callback
+     */
     public void getListFromCallBack(List<String> repoList) {
         list = repoList;
         java.util.Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
@@ -72,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * perform API call to get repositories list
+     */
     public void getRepoList()
     {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
@@ -80,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * @param projectName repository to create
+     *
+     * perform API call to create a repository
+     */
     private void createRepo(final String projectName) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
@@ -88,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new RepoCallBack(this));
     }
 
+    /**
+     * @param projectName repository to delete
+     *
+     * perform API to delete a repository
+     */
     public void deleteRepo(final String projectName) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
@@ -97,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * @param view Mainactivity
+     *
+     * create alert to create a repository
+     */
     public void createProject(View view) {
         final EditText repository = new EditText(this);
         repository.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -106,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 .setView(repository)
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //TODO handle text error
-                        createRepo(repository.getText().toString());
+                        if (!repository.getText().toString().isEmpty())
+                            createRepo(repository.getText().toString());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -118,6 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * @param menu main_menu
+     * @return
+     *
+     * Handle search view to find a specific repository
+     *
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -149,6 +186,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * @param s string to find
+     * @return list of repositories found
+     *
+     * return a list of repository which contains the following string
+     */
     private List<String> getCurrentList(String s)
     {
         List<String> currentList = new ArrayList();

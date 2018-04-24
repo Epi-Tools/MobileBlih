@@ -11,11 +11,9 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import blih.epitools.com.mobileblih.API.BlihAPI;
 import blih.epitools.com.mobileblih.CallBacks.AuthCallBack;
@@ -30,8 +28,12 @@ import retrofit2.Call;
 public class AuthActivity extends AppCompatActivity {
 
     EditText email;
-    //TODO add Github button to login
 
+    /**
+     * @param savedInstanceState
+     *
+     * Initialise AuthActivity and GitHub Link
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,11 @@ public class AuthActivity extends AppCompatActivity {
         underLineGithub();
     }
 
+    /**
+     * @param view auth_layout
+     *
+     * When click on Login button, perform Authentication API Call
+     */
     public void AuthBlihAPI(View view)
     {
         email = (EditText) findViewById(blih.epitools.com.mobileblih.R.id.email);
@@ -53,6 +60,11 @@ public class AuthActivity extends AppCompatActivity {
         call.enqueue(new AuthCallBack(this));
     }
 
+    /**
+     * @param token Access token from API response
+     *
+     *  Launch MainActivity and save both email and access token
+     */
     public void loadMainActivity(String token)
     {
         Intent intent = new Intent(this, MainActivity.class);
@@ -60,10 +72,9 @@ public class AuthActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void githubAccess(View view) {
-
-    }
-
+    /**
+     * Manage Github link under the Login Button
+     */
     private void underLineGithub() {
         final TextView textView = (TextView) findViewById(R.id.github_button);
         SpannableString ss = new SpannableString(textView.getText());

@@ -23,12 +23,25 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsViewHolder> {
         context = _context;
     }
 
+    /**
+     * @param parent
+     * @param viewType
+     * @return ProjectViewHolder
+     *
+     * Generate a viewholder to handle repository names
+     */
     @Override
     public ProjectsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_row, parent, false);
         return new ProjectsViewHolder(itemView, context);
     }
 
+    /**
+     * @param holder ProjectViewHolder
+     * @param position current position
+     *
+     * bind repository name from the list to each item
+     */
     @Override
     public void onBindViewHolder(final ProjectsViewHolder holder, final int position) {
         holder.bind(repositories.get(position));
@@ -47,6 +60,11 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsViewHolder> {
         return repositories.size();
     }
 
+    /**
+     * @param list new repo list
+     *
+     * update repository list when the adapter has already been created
+     */
     public void updateList(List<String> list) {
         repositories = list;
         notifyDataSetChanged();

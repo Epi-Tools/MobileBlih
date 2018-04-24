@@ -37,6 +37,11 @@ public class AclActivity extends AppCompatActivity {
     private AclAdapter adapter;
     private String aclSelected;
 
+    /**
+     * @param savedInstanceState Intent
+     *
+     * Get selected project name and write on the supportActionBar
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +53,22 @@ public class AclActivity extends AppCompatActivity {
         Utils.showLoading(this, "Please wait...");
     }
 
+    /**
+     * Get acl list on onResume
+     */
     @Override
     protected void onResume() {
         super.onResume();
         getAclList();
     }
 
+    /**
+     * @param menu acl menu
+     * @return
+     *
+     * load menu acl
+     *
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_acl, menu);
@@ -61,6 +76,13 @@ public class AclActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * @param item back button on Support action bar or delete button
+     * @return
+     *
+     * Actions for home back button and delete button.
+     *
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -73,6 +95,9 @@ public class AclActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Alert when delete Button from ActionBar is clicked
+     */
     private void alertDeleteRepo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
@@ -91,6 +116,10 @@ public class AclActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * @param projectName Name of the deleted project
+     *  API call to delete a repository
+     */
     public void deleteRepo(final String projectName) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
@@ -99,6 +128,9 @@ public class AclActivity extends AppCompatActivity {
         call.enqueue(new RepoCallBack(this));
     }
 
+    /**
+     * API call to receive the acl List from the current repository
+     */
     public void getAclList() {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
@@ -106,6 +138,12 @@ public class AclActivity extends AppCompatActivity {
         call.enqueue(new AclListCallBack(this));
     }
 
+    /**
+     * @param userName User login of the user acl
+     * @param acl acl chosen (r or rw)
+     *
+     * API call to add, change or delete ACL of a user
+     */
     public void updateAcl(String userName, String acl) {
         BlihAPI service = BlihAPI.retrofit.create(BlihAPI.class);
 
@@ -114,6 +152,11 @@ public class AclActivity extends AppCompatActivity {
         call.enqueue(new AclUpdateCallBack(this));
     }
 
+    /**
+     * @param repoList ACL list
+     *
+     * Callback from the acl List API call
+     */
     public void getAclListFromCallBack(List<UserACL> repoList) {
         List<UserACL> list = repoList;
         TextView noACL = (TextView) findViewById(R.id.no_acl);
@@ -134,6 +177,11 @@ public class AclActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @param view Current View
+     *
+     * When click on Floating action button, show a dialog to write user login and select ACL to add
+     */
     public void setUserAcl(View view) {
         LayoutInflater inflater = this.getLayoutInflater();
 
@@ -144,6 +192,11 @@ public class AclActivity extends AppCompatActivity {
         aclBuilder(dialogView, username.getText().toString(), "Add ACL");
     }
 
+    /**
+     * @param user
+     *
+     *  When clicking on the specific user from recycler view, edit the acl from the selected user
+     */
     public void editAcl(UserACL user) {
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.edit_layout, null);
@@ -154,6 +207,13 @@ public class AclActivity extends AppCompatActivity {
         aclBuilder(dialogView, username.getText().toString(), "Edit ACL");
     }
 
+    /**
+     * @param dialogView View when clicking on recycler view item or FAB
+     * @param id spinner id
+     * @param array editor array or create array
+     *
+     * Manage spinner for dialog
+     */
     public void spinnerHandler(View dialogView, int id, int array) {
         Spinner spinner = (Spinner) dialogView.findViewById(id);
 
@@ -174,6 +234,13 @@ public class AclActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @param dialogView View when clicking on recycler view item or FAB
+     * @param username user login
+     * @param title title for alert
+     *
+     * Create acl dialog for edit or create ACL
+     */
     private void aclBuilder(final View dialogView, final String username, final String title) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 

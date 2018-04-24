@@ -18,6 +18,12 @@ public class RepoCallBack implements Callback<UserToken> {
         context = _context;
     }
 
+    /**
+     * @param call
+     * @param response
+     *
+     * Callback to either create or delete a repository in both main or acl activity
+     */
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
         Utils.hideLoading();
@@ -40,6 +46,12 @@ public class RepoCallBack implements Callback<UserToken> {
         }
     }
 
+    /**
+     * @param call
+     * @param t
+     *
+     * Callback when the call isn't working
+     */
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
         Utils.hideLoading();

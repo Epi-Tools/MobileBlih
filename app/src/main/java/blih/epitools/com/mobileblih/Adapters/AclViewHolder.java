@@ -12,12 +12,22 @@ public class AclViewHolder extends RecyclerView.ViewHolder {
     private TextView userName;
     private TextView userAcl;
 
+    /**
+     * @param itemView current item
+     *
+     * get textview to update datas on bind
+     */
     public AclViewHolder(View itemView) {
         super(itemView);
         userName = (TextView) itemView.findViewById(R.id.user_name);
         userAcl = (TextView) itemView.findViewById(R.id.user_acl);
     }
 
+    /**
+     * @param acl ACL object
+     *
+     * Update each username and each acl
+     */
     public void bind(final UserACL acl) {
         userName.setText(acl.getName());
         userAcl.setText(acl.getAcl());

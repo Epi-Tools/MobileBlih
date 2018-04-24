@@ -1,7 +1,6 @@
 package blih.epitools.com.mobileblih.CallBacks;
 
 
-import android.util.Log;
 
 import blih.epitools.com.mobileblih.Activities.AuthActivity;
 import blih.epitools.com.mobileblih.POJO.UserToken;
@@ -18,11 +17,16 @@ public class AuthCallBack implements Callback<UserToken> {
         context = _context;
     }
 
+    /**
+     * @param call
+     * @param response
+     *
+     * Callback to get token from API Call
+     */
     @Override
     public void onResponse(Call<UserToken> call, Response<UserToken> response) {
         Utils.hideLoading();
         if (response.isSuccessful()) {
-            Log.e("Response", response.message());
             if (response.body().getToken() == null) {
                 if (response.body().getError() == null) {
                     Utils.alertManager(context, "Authentication", response.body().getErr());
@@ -37,6 +41,12 @@ public class AuthCallBack implements Callback<UserToken> {
         }
     }
 
+    /**
+     * @param call
+     * @param t
+     *
+     * CallBack when the call isn't working
+     */
     @Override
     public void onFailure(Call<UserToken> call, Throwable t) {
         Utils.hideLoading();
