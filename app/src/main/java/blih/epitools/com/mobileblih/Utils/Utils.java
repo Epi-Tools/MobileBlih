@@ -104,6 +104,7 @@ public class Utils {
      * hide progressDialog
      */
     public static void hideLoading() {
+        pd.dismiss();
         pd.hide();
     }
 

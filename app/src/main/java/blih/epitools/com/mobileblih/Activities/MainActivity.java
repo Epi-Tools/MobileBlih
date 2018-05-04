@@ -1,9 +1,13 @@
 package blih.epitools.com.mobileblih.Activities;
 
+import android.app.ActionBar.LayoutParams;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +53,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+        assignEmailToActionBar();
         Utils.showLoading(this, "Please wait...");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Utils.hideLoading();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideLoading();
+    }
+
+    /**
+     * Put user email below app title
+     */
+    private void assignEmailToActionBar() {
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY);
+        View emailView = LayoutInflater.from(this).inflate(R.layout.email_row, null);
+
+        TextView email = (TextView) emailView.findViewById(R.id.user_email);
+        email.setText(User.getInstance().getEmail());
+        TextView title = (TextView) emailView.findViewById(R.id.application_name);
+        title.setText(getSupportActionBar().getTitle());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setCustomView(emailView, lp);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
     }
 
     /**
@@ -181,8 +217,21 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * @param item
+     * @return
+     *
+     * Handle log out actions
+     *
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_log_out) {
+            SharedPreferences.Editor editor = getSharedPreferences("credentials", Context.MODE_PRIVATE).edit();
+            editor.clear();
+            editor.apply();
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -203,10 +252,12 @@ public class MainActivity extends AppCompatActivity {
         return currentList;
     }
 
+    /**
+     * Move application to the background and access Android main menu
+     */
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
-        finish();
     }
 
 }

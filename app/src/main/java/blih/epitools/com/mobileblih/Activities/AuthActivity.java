@@ -1,6 +1,7 @@
 package blih.epitools.com.mobileblih.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
@@ -27,7 +28,7 @@ import retrofit2.Call;
 
 public class AuthActivity extends AppCompatActivity {
 
-    EditText email;
+    private EditText email;
 
     /**
      * @param savedInstanceState
@@ -37,6 +38,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getUserCredentials();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.auth_layout);
         underLineGithub();
@@ -69,8 +71,36 @@ public class AuthActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, MainActivity.class);
         User.getInstance().setUserInfos(email.getText().toString(), token);
+        saveCredentials(email.getText().toString(), token);
         startActivity(intent);
     }
+
+    /**
+     * @param email user email
+     * @param token access token from API response
+     */
+    public void saveCredentials(String email, String token) {
+        SharedPreferences.Editor editor = getSharedPreferences("credentials", MODE_PRIVATE).edit();
+        editor.putString("email", email);
+        editor.putString("token", token);
+        editor.apply();
+    }
+
+    /**
+     * Get credential from sharedPreferences and access mainActivity if they exist
+     */
+    private void getUserCredentials() {
+        SharedPreferences prefs = getSharedPreferences("credentials", MODE_PRIVATE);
+        String userEmail = prefs.getString("email", null);
+        if (userEmail != null)
+        {
+            String userToken = prefs.getString("token", null);
+            User.getInstance().setUserInfos(userEmail, userToken);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
     /**
      * Manage Github link under the Login Button
