@@ -1,5 +1,8 @@
 package blih.epitools.com.mobileblih.Activities;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -91,6 +94,12 @@ public class AclActivity extends AppCompatActivity {
             onBackPressed();
         } else if (id == R.id.action_delete) {
             alertDeleteRepo();
+        } else if (id == R.id.copy_url_repo) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Repository URL", "git@git.epitech.eu:/" + User.getInstance().getEmail() + "/" + currentProjet);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "The repository URL of " + currentProjet + " has been copied. You can now share it to your team.",
+                    Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }

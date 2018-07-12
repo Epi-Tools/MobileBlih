@@ -7,8 +7,8 @@ android {
         applicationId "blih.epitools.com.mobileblih"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.2"
+        versionCode 4
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
